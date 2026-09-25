@@ -8,6 +8,30 @@
 
 export type Tone = "ink" | "orange" | "yellow" | "paper" | "cream";
 
+/**
+ * The site's public address, for SEO / sitemap / share cards.
+ * Uses NEXT_PUBLIC_SITE_URL when it's set to a real URL, otherwise the
+ * domain Vercel provides at build time, otherwise localhost. Blank or
+ * malformed values are skipped instead of crashing the build.
+ */
+function resolveSiteUrl() {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_URL,
+  ];
+  for (const raw of candidates) {
+    const value = raw?.trim();
+    if (!value) continue;
+    try {
+      return new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`).origin;
+    } catch {
+      /* not a valid URL — try the next one */
+    }
+  }
+  return "http://localhost:3000";
+}
+
 /* --------------------------------------------------------------------------
    Brand + contact
    -------------------------------------------------------------------------- */
@@ -15,8 +39,8 @@ export const site = {
   name: "The Tech House",
   shortName: "TTH",
   wordmark: "THE TECH HOUSE",
-  // Used for SEO/Open Graph. Set NEXT_PUBLIC_SITE_URL in .env.local when you have a domain.
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  // Used for SEO/Open Graph. Set NEXT_PUBLIC_SITE_URL when you have a custom domain.
+  url: resolveSiteUrl(),
   title: "The Tech House — Brands, Websites & AI Automation",
   description:
     "The Tech House (TTH) is a design, web and AI automation studio. We build brand identities, lightning-fast websites and AI agents that help businesses sell more.",
