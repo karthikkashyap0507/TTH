@@ -1,0 +1,257 @@
+"use client";
+
+import Link from "next/link";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useVelocity,
+  type Variants,
+} from "motion/react";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import { hero, type Tone } from "@/content/site";
+import { HouseMark } from "@/components/icons";
+import { useWizard } from "@/components/wizard/WizardProvider";
+import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
+import { cx, toneClass } from "@/lib/tones";
+
+const ease = [0.22, 1, 0.36, 1] as const;
+
+export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { open } = useWizard();
+  const reduce = usePrefersReducedMotion();
+
+  return (
+    <section
+      id="top"
+      ref={sectionRef}
+      className="dot-grid relative flex min-h-[78svh] flex-col justify-center overflow-hidden pt-24 pb-14 md:min-h-svh md:pt-28 md:pb-20"
+    >
+      {hero.stickers.map((s, i) => (
+        <Sticker key={s.label} {...s} delay={1 + i * 0.16} bounds={sectionRef} />
+      ))}
+
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
+        <h1 className="font-display text-[clamp(2.3rem,11.2vw,8.4rem)] leading-[0.98] font-black tracking-tight whitespace-nowrap uppercase">
+          <span className="sr-only">
+            {hero.lead} {hero.rotating.join(", ")} — {hero.tail}
+          </span>
+          <span aria-hidden="true">
+            <span className="block overflow-hidden pb-[0.04em]">
+              <motion.span
+                className="block"
+                initial={{ y: "115%", rotate: 4 }}
+                animate={{ y: "0%", rotate: 0 }}
+                transition={{ duration: 0.9, ease, delay: 0.1 }}
+              >
+                {hero.lead}
+              </motion.span>
+            </span>
+            <RotatingWord words={hero.rotating} reduce={reduce} />
+            <motion.span
+              className="block text-orange"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease, delay: 0.45 }}
+            >
+              {hero.tail}
+            </motion.span>
+          </span>
+        </h1>
+
+        <div className="mt-6 flex flex-col gap-8 sm:mt-10 sm:flex-row sm:items-end sm:justify-between">
+          <motion.div
+            className="max-w-xl"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease, delay: 0.6 }}
+          >
+            <p className="text-base leading-relaxed font-medium sm:text-lg">{hero.body}</p>
+            <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+              <button
+                type="button"
+                onClick={() => open("hero")}
+                className="rounded-full bg-ink px-6 py-3.5 font-display text-sm font-bold text-cream shadow-[5px_5px_0_0_#ff4d00] transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:px-8 sm:py-4 sm:text-base"
+              >
+                START A PROJECT
+              </button>
+              <Link
+                href="/#work"
+                className="rounded-full border-2 border-ink bg-paper px-6 py-3.5 font-display text-sm font-bold transition-colors hover:bg-yellow sm:px-8 sm:py-4 sm:text-base"
+              >
+                SEE OUR WORK
+              </Link>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="hidden shrink-0 sm:block"
+            initial={{ opacity: 0, scale: 0.6, rotate: -30 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 160, damping: 14, delay: 0.85 }}
+          >
+            <SpinningBadge text={hero.badge} />
+          </motion.div>
+        </div>
+
+        <motion.p
+          className="mt-8 font-display text-[0.6rem] font-bold tracking-[0.2em] text-ink/45 sm:mt-12 sm:text-xs"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 2 }}
+        >
+          {hero.hint}
+        </motion.p>
+      </div>
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Rotating outlined word — letters roll up one after another
+   -------------------------------------------------------------------------- */
+const letter: Variants = {
+  enter: { y: "110%" },
+  center: (i: number) => ({ y: "0%", transition: { duration: 0.55, ease, delay: i * 0.03 } }),
+  exit: (i: number) => ({ y: "-110%", transition: { duration: 0.32, ease: [0.55, 0, 1, 0.45], delay: i * 0.018 } }),
+};
+
+function RotatingWord({ words, reduce }: { words: string[]; reduce: boolean }) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (reduce) return;
+    let interval: number | undefined;
+    const start = window.setTimeout(() => {
+      setIndex((i) => (i + 1) % words.length);
+      interval = window.setInterval(() => setIndex((i) => (i + 1) % words.length), 2400);
+    }, 2600);
+    return () => {
+      window.clearTimeout(start);
+      window.clearInterval(interval);
+    };
+  }, [words.length, reduce]);
+
+  const word = words[index];
+
+  return (
+    <span className="block overflow-hidden pb-[0.04em]">
+      <motion.span
+        className="block"
+        initial={{ y: "115%", rotate: 4 }}
+        animate={{ y: "0%", rotate: 0 }}
+        transition={{ duration: 0.9, ease, delay: 0.22 }}
+      >
+        <span className="relative block h-[1em] leading-none text-outline">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span key={word} className="absolute inset-0 flex" initial="enter" animate="center" exit="exit">
+              {word.split("").map((ch, i) => (
+                <span key={i} className="inline-block overflow-hidden">
+                  <motion.span className="inline-block" custom={i} variants={letter}>
+                    {ch === " " ? " " : ch}
+                  </motion.span>
+                </span>
+              ))}
+            </motion.span>
+          </AnimatePresence>
+        </span>
+      </motion.span>
+    </span>
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Draggable, throwable stickers that drop in from the top
+   -------------------------------------------------------------------------- */
+function Sticker({
+  label,
+  tone,
+  rotate,
+  className,
+  delay,
+  bounds,
+}: {
+  label: string;
+  tone: Tone;
+  rotate: number;
+  className: string;
+  delay: number;
+  bounds: RefObject<HTMLElement | null>;
+}) {
+  const [lifted, setLifted] = useState(false);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const vx = useVelocity(x);
+  // Stickers lean into the direction they're thrown
+  const lean = useSpring(useTransform(vx, [-2200, 0, 2200], [-28, 0, 28], { clamp: true }), {
+    stiffness: 260,
+    damping: 18,
+  });
+
+  return (
+    <motion.div
+      className={cx("absolute", lifted ? "z-40" : "z-20", className)}
+      initial={{ y: -640, rotate: rotate * 3.5, opacity: 0 }}
+      animate={{ y: 0, rotate, opacity: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 95,
+        damping: 9,
+        mass: 0.9,
+        delay,
+        opacity: { duration: 0.15, delay },
+      }}
+    >
+      <motion.div
+        drag
+        dragConstraints={bounds}
+        dragElastic={0.18}
+        dragTransition={{ power: 0.35, timeConstant: 260, bounceStiffness: 520, bounceDamping: 16 }}
+        onDragStart={() => setLifted(true)}
+        onDragEnd={() => setLifted(false)}
+        whileHover={{ scale: 1.05 }}
+        whileDrag={{ scale: 1.12 }}
+        whileTap={{ scale: 1.08 }}
+        style={{ x, y, rotate: lean, WebkitTouchCallout: "none" }}
+        className="cursor-grab touch-none select-none active:cursor-grabbing"
+      >
+        <div
+          className={cx(
+            "flex items-center rounded-full border-2 border-ink px-4 py-2 font-display text-sm font-black tracking-tight whitespace-nowrap shadow-[4px_4px_0_0_#141414] transition-shadow sm:px-6 sm:py-3 sm:text-lg sm:shadow-[5px_5px_0_0_#141414]",
+            lifted && "shadow-[9px_9px_0_0_#141414] sm:shadow-[10px_10px_0_0_#141414]",
+            toneClass[tone],
+          )}
+        >
+          {label}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* --------------------------------------------------------------------------
+   Circular spinning badge
+   -------------------------------------------------------------------------- */
+function SpinningBadge({ text }: { text: string }) {
+  return (
+    <div className="relative grid size-32 place-items-center lg:size-36">
+      <svg viewBox="0 0 120 120" className="absolute inset-0 animate-spin-slow" aria-hidden="true">
+        <defs>
+          <path id="tth-badge-circle" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" />
+        </defs>
+        <text className="fill-ink font-display text-[11px] font-bold">
+          {/* 2πr ≈ 289 — stretch the text so it wraps the circle exactly once */}
+          <textPath href="#tth-badge-circle" textLength="287" lengthAdjust="spacing">
+            {text}
+          </textPath>
+        </text>
+      </svg>
+      <span className="grid size-14 place-items-center rounded-full border-2 border-ink bg-orange text-cream shadow-[3px_3px_0_0_#141414]">
+        <HouseMark className="size-7" />
+      </span>
+    </div>
+  );
+}

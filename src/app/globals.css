@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   The Tech House — design tokens
+   ink / cream / paper / orange / yellow, chunky borders, hard shadows
+------------------------------------------------------------------- */
+@theme {
+  --color-ink: #141414;
+  --color-cream: #faf3e5;
+  --color-paper: #fffcf5;
+  --color-orange: #ff4d00;
+  --color-yellow: #ffc72e;
+  --color-smoke: #3d3a35;
+
+  --animate-marquee: marquee 32s linear infinite;
+  --animate-marquee-fast: marquee 18s linear infinite;
+  --animate-spin-slow: spin-slow 16s linear infinite;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-blink: blink 1.1s steps(1, end) infinite;
+  --animate-site-scroll: site-scroll 14s ease-in-out infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  @keyframes site-scroll {
+    0%,
+    12% {
+      transform: translateY(0);
+    }
+    45%,
+    58% {
+      transform: translateY(var(--scroll-distance, -45%));
+    }
+    92%,
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+
+@theme inline {
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-cream);
+  }
+  ::selection {
+    background: var(--color-orange);
+    color: var(--color-cream);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-orange);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Faint dotted-paper background */
+@utility dot-grid {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-ink) 14%, transparent) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 28px 28px;
+}
+
+/* Hollow, outlined display text */
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-ink);
+  @media (width >= 40rem) {
+    -webkit-text-stroke-width: 2.5px;
+  }
+}
+
+@utility text-outline-cream {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-cream);
+  @media (width >= 40rem) {
+    -webkit-text-stroke-width: 2px;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Diagonal hazard stripes, used on placeholders */
+@utility stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 10px,
+    color-mix(in srgb, var(--color-ink) 5%, transparent) 10px 20px
+  );
+}
+
+/* ------------------------------------------------------------------
+   Beam CTA — a light streak that orbits the navbar button
+------------------------------------------------------------------- */
+@property --beam-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.beam-cta {
+  position: relative;
+  isolation: isolate;
+  animation: beam-glow 3s ease-in-out infinite;
+}
+.beam-cta::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0deg 240deg,
+    color-mix(in srgb, var(--color-orange) 30%, transparent) 280deg,
+    var(--color-orange) 320deg,
+    var(--color-yellow) 345deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  animation: beam-orbit 3.4s linear infinite;
+  pointer-events: none;
+}
+@keyframes beam-orbit {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+@keyframes beam-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-orange) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 22px 2px color-mix(in srgb, var(--color-orange) 35%, transparent);
+  }
+}
+
+/* Fades the edges of horizontal scrollers */
+.fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee,
+  .animate-marquee-fast,
+  .animate-spin-slow,
+  .animate-float,
+  .animate-site-scroll,
+  .beam-cta,
+  .beam-cta::before {
+    animation: none !important;
+  }
+}
