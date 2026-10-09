@@ -1,10 +1,9 @@
 import "server-only";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import type { ApplicationStatus } from "@/content/careers";
 
 /* ==========================================================================
-   Tiny data store for project enquiries ("leads") and job applications.
+   Tiny data store for project enquiries ("leads").
 
    - Default: a JSON file at .data/db.json — perfect for local dev or a
      single VPS / Node server (`npm start`).
@@ -25,38 +24,11 @@ export type Lead = {
   source?: string;
 };
 
-export type Application = {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  status: ApplicationStatus;
-  role: string;
-  roleTitle: string;
-  name: string;
-  email: string;
-  phone: string;
-  city: string;
-  profileUrl: string;
-  skills: string[];
-  experience: string;
-  projectUrl: string;
-  secondProjectUrl?: string;
-  projectNote: string;
-  videoUrl: string;
-  why?: string;
-  availability: string;
-  adminNote?: string;
-};
-
-type DB = { leads: Lead[]; applications: Application[] };
+type DB = { leads: Lead[] };
 
 interface Store {
   addLead(lead: Lead): Promise<void>;
   listLeads(): Promise<Lead[]>;
-  addApplication(app: Application): Promise<void>;
-  getApplication(id: string): Promise<Application | null>;
-  listApplications(): Promise<Application[]>;
-  updateApplication(id: string, patch: Partial<Pick<Application, "status" | "adminNote">>): Promise<Application | null>;
 }
 
 /* ------------------------------ JSON file ------------------------------ */
@@ -68,9 +40,9 @@ class FileStore implements Store {
     try {
       const raw = await fs.readFile(this.file, "utf8");
       const db = JSON.parse(raw) as Partial<DB>;
-      return { leads: db.leads ?? [], applications: db.applications ?? [] };
+      return { leads: db.leads ?? [] };
     } catch {
-      return { leads: [], applications: [] };
+      return { leads: [] };
     }
   }
 
@@ -101,25 +73,6 @@ class FileStore implements Store {
   async listLeads() {
     return (await this.read()).leads;
   }
-  addApplication(app: Application) {
-    return this.mutate((db) => {
-      db.applications.unshift(app);
-    });
-  }
-  async getApplication(id: string) {
-    return (await this.read()).applications.find((a) => a.id === id) ?? null;
-  }
-  async listApplications() {
-    return (await this.read()).applications;
-  }
-  updateApplication(id: string, patch: Partial<Pick<Application, "status" | "adminNote">>) {
-    return this.mutate((db) => {
-      const app = db.applications.find((a) => a.id === id);
-      if (!app) return null;
-      Object.assign(app, patch, { updatedAt: new Date().toISOString() });
-      return app;
-    });
-  }
 }
 
 /* ------------------------------ Upstash ------------------------------ */
@@ -142,31 +95,11 @@ class UpstashStore implements Store {
   }
 
   async addLead(lead: Lead) {
-    await this.cmd("LPUSH", "tth:leads", JSON.stringify(lead));
+    await this.cmd("LPUSH", "tsh:leads", JSON.stringify(lead));
   }
   async listLeads() {
-    const rows = await this.cmd<string[]>("LRANGE", "tth:leads", 0, 499);
+    const rows = await this.cmd<string[]>("LRANGE", "tsh:leads", 0, 499);
     return rows.map((r) => JSON.parse(r) as Lead);
-  }
-  async addApplication(app: Application) {
-    await this.cmd("HSET", "tth:applications", app.id, JSON.stringify(app));
-  }
-  async getApplication(id: string) {
-    const raw = await this.cmd<string | null>("HGET", "tth:applications", id);
-    return raw ? (JSON.parse(raw) as Application) : null;
-  }
-  async listApplications() {
-    const flat = await this.cmd<string[]>("HGETALL", "tth:applications");
-    const apps: Application[] = [];
-    for (let i = 1; i < flat.length; i += 2) apps.push(JSON.parse(flat[i]) as Application);
-    return apps.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-  }
-  async updateApplication(id: string, patch: Partial<Pick<Application, "status" | "adminNote">>) {
-    const app = await this.getApplication(id);
-    if (!app) return null;
-    const next = { ...app, ...patch, updatedAt: new Date().toISOString() };
-    await this.cmd("HSET", "tth:applications", id, JSON.stringify(next));
-    return next;
   }
 }
 
@@ -181,8 +114,8 @@ export function store(): Store {
   return instance;
 }
 
-/** Short, human-friendly IDs like TTH-7K3QX (no 0/O/1/I confusion). */
-export function makeId(prefix = "TTH") {
+/** Short, human-friendly IDs like TSH-7K3QX (no 0/O/1/I confusion). */
+export function makeId(prefix = "TSH") {
   const alphabet = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
   const bytes = crypto.getRandomValues(new Uint8Array(6));
   return `${prefix}-${Array.from(bytes, (b) => alphabet[b % alphabet.length]).join("")}`;

@@ -2,12 +2,14 @@ import { Hero } from "@/components/home/Hero";
 import { Marquee } from "@/components/Marquee";
 import { Services } from "@/components/home/Services";
 import { WorkPreview } from "@/components/home/WorkPreview";
+import { ResultsTeaser } from "@/components/home/ResultsTeaser";
+import { Clients } from "@/components/Clients";
 import { Testimonials } from "@/components/home/Testimonials";
 import { Stats } from "@/components/Stats";
 import { Process } from "@/components/home/Process";
 import { TeamTeaser } from "@/components/home/TeamTeaser";
 import { ContactCTA } from "@/components/ContactCTA";
-import { services, site } from "@/content/site";
+import { services, site, tagline } from "@/content/site";
 
 export default function HomePage() {
   const jsonLd = {
@@ -15,11 +17,13 @@ export default function HomePage() {
     "@type": "ProfessionalService",
     name: site.name,
     alternateName: site.shortName,
+    slogan: tagline,
     description: site.description,
     url: site.url,
     email: site.email,
-    areaServed: "Worldwide",
-    address: { "@type": "PostalAddress", addressCountry: "IN" },
+    telephone: site.phone.replace(/\s/g, ""),
+    areaServed: "IN",
+    address: { "@type": "PostalAddress", addressLocality: "Delhi", addressCountry: "IN" },
     sameAs: [site.socials.instagram.href, site.socials.linkedin.href],
     hasOfferCatalog: {
       "@type": "OfferCatalog",
@@ -37,6 +41,8 @@ export default function HomePage() {
       <Hero />
       <Marquee />
       <Services />
+      <ResultsTeaser />
+      <Clients />
       <WorkPreview />
       <Testimonials />
       <Stats />

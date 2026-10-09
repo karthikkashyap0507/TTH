@@ -9,7 +9,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
     <WizardProvider>
       <a
         href="#content"
-        className="sr-only z-[200] rounded-full bg-ink px-5 py-3 font-display text-sm font-bold text-cream focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        className="sr-only z-[200] rounded-full bg-red px-5 py-3 font-display text-sm font-bold text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
       >
         Skip to content
       </a>

@@ -10,14 +10,42 @@ const initials = (name: string) =>
     .map((w) => w[0]!.toUpperCase())
     .join("");
 
-/** Cover art: the project's image, or a generated monogram poster. */
-export function ProjectCover({ project, className, size = "lg" }: { project: Project; className?: string; size?: "lg" | "sm" }) {
+/**
+ * A tall website screenshot shown from the top; while the card is hovered it
+ * slowly scrolls down through the page, then snaps back when the pointer leaves.
+ */
+function ScrollShot({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-white [container-type:size]">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        draggable={false}
+        className="absolute inset-x-0 top-0 w-full transition-transform duration-700 ease-in-out will-change-transform group-hover:translate-y-[calc(-100%_+_100cqh)] group-hover:duration-[6000ms] motion-reduce:transition-none"
+      />
+    </div>
+  );
+}
+
+/** Cover art: the project's screenshot, or a generated monogram poster. */
+export function ProjectCover({
+  project,
+  className,
+  size = "lg",
+  showImage = true,
+}: {
+  project: Project;
+  className?: string;
+  size?: "lg" | "sm";
+  showImage?: boolean;
+}) {
   const { palette } = project;
   return (
     <div className={cx("relative overflow-hidden", className)} style={{ background: palette.accent, color: palette.bg }}>
-      {project.image ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={project.image} alt={`${project.name} cover`} className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      {project.image && showImage ? (
+        <ScrollShot src={project.image} alt={`${project.name} website`} />
       ) : (
         <>
           <div
@@ -38,7 +66,7 @@ export function ProjectCover({ project, className, size = "lg" }: { project: Pro
                 size === "lg" ? "text-[3.25rem] sm:text-[6rem] lg:text-[7.5rem]" : "text-4xl sm:text-5xl",
               )}
             >
-              {initials(project.name)}
+              {project.monogram ?? initials(project.name)}
             </span>
           </div>
         </>
@@ -67,8 +95,7 @@ export function SitePreview({ project }: { project: Project }) {
     );
   }
   if (project.image) {
-    // eslint-disable-next-line @next/next/no-img-element
-    return <img src={project.image} alt={`${project.name} website`} className="absolute inset-0 h-full w-full object-cover object-top" loading="lazy" />;
+    return <ScrollShot src={project.image} alt={`${project.name} website`} />;
   }
 
   const { bg, fg, accent } = project.palette;

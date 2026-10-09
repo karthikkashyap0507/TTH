@@ -6,24 +6,26 @@ export const wizard = {
   steps: [
     {
       key: "service",
-      title: "What are we building?",
+      title: "What do you need?",
       hint: "Pick the closest one — we'll fine-tune it together.",
       options: [
-        { value: "Brand identity", sub: "Logo, colours, type, social kit" },
-        { value: "Website or store", sub: "Landing page, e-commerce, web app" },
-        { value: "AI automation", sub: "WhatsApp agent, lead bots, workflows" },
-        { value: "The whole house", sub: "Brand + website + AI, end to end" },
+        { value: "Performance marketing", sub: "Meta ads that scale profitably" },
+        { value: "Website or app", sub: "Shopify, custom sites, iOS & Android" },
+        { value: "Custom software", sub: "CRM, ERP, dashboards & automations" },
+        { value: "Branding & creatives", sub: "Identity, ad creatives, packaging" },
+        { value: "Free account audit", sub: "Find where your ads leak money" },
+        { value: "The whole house", sub: "Ads + tech + brand, end to end" },
       ],
     },
     {
       key: "budget",
       title: "What's the budget?",
-      hint: "A rough range helps us suggest the right plan.",
+      hint: "A rough monthly or project budget helps us suggest the right plan.",
       options: [
         { value: "Under ₹25k", sub: "Starter" },
         { value: "₹25k – ₹75k", sub: "Most popular" },
         { value: "₹75k – ₹2L", sub: "Growth" },
-        { value: "₹2L+", sub: "Full build" },
+        { value: "₹2L+", sub: "Scale" },
         { value: "Not sure yet", sub: "Help me decide" },
       ],
     },

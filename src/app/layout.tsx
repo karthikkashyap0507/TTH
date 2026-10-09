@@ -40,7 +40,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#faf3e5",
+  themeColor: "#0a0a0a",
+  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
 };
@@ -48,7 +49,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${archivo.variable} ${grotesk.variable}`}>
-      <body className="bg-cream font-body text-ink antialiased">
+      <body className="bg-ink font-body text-bone antialiased">
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

@@ -4,10 +4,11 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { wizard } from "@/content/wizard";
 import { site, whatsappLink } from "@/content/site";
-import { ArrowLeft, ArrowRight, Check, Close, HouseMark, WhatsAppIcon } from "@/components/icons";
+import { ArrowLeft, ArrowRight, Check, Close, ScaleMark, WhatsAppIcon } from "@/components/icons";
 import { Confetti } from "@/components/Confetti";
 import { cx } from "@/lib/tones";
 import { useScrollLock } from "@/lib/useScrollLock";
+import type { WizardPreset } from "./WizardProvider";
 
 type Answers = { service: string; budget: string };
 type Contact = { name: string; phone: string; email: string; note: string; website: string };
@@ -21,7 +22,17 @@ const slide = {
   exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
 };
 
-export function ProjectWizard({ open, onClose, source }: { open: boolean; onClose: () => void; source: string }) {
+export function ProjectWizard({
+  open,
+  onClose,
+  source,
+  preset,
+}: {
+  open: boolean;
+  onClose: () => void;
+  source: string;
+  preset?: WizardPreset;
+}) {
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState(1);
   const [answers, setAnswers] = useState<Answers>({ service: "", budget: "" });
@@ -38,9 +49,11 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
   useEffect(() => {
     if (open) {
       returnFocus.current = document.activeElement as HTMLElement | null;
-      setStep(0);
+      // A preset service (e.g. "Free account audit") skips straight to the budget question
+      const presetService = wizard.steps[0].options.some((o) => o.value === preset?.service) ? preset!.service! : "";
+      setStep(presetService ? 1 : 0);
       setDir(1);
-      setAnswers({ service: "", budget: "" });
+      setAnswers({ service: presetService, budget: "" });
       setContact(emptyContact);
       setStatus("idle");
       setError("");
@@ -48,7 +61,7 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
     } else {
       returnFocus.current?.focus?.();
     }
-  }, [open]);
+  }, [open, preset]);
 
   useEffect(() => {
     if (!open) return;
@@ -104,7 +117,7 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: 0.2, delay: 0.1 } }}
         >
-          <div className="absolute inset-0 bg-ink/60 backdrop-blur-[3px]" onClick={onClose} aria-hidden="true" />
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-[3px]" onClick={onClose} aria-hidden="true" />
 
           <motion.div
             ref={panelRef}
@@ -112,18 +125,16 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
             aria-modal="true"
             aria-labelledby={titleId}
             tabIndex={-1}
-            className="relative flex max-h-[94svh] w-full max-w-xl flex-col overflow-hidden rounded-t-3xl border-2 border-ink bg-cream shadow-[8px_8px_0_0_#141414] outline-none sm:rounded-3xl"
+            className="relative flex max-h-[94svh] w-full max-w-xl flex-col overflow-hidden rounded-t-3xl border border-white/15 bg-coal text-bone shadow-pop-lg outline-none sm:rounded-3xl"
             initial={{ y: 80, opacity: 0, scale: 0.96 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 60, opacity: 0, scale: 0.97 }}
             transition={{ type: "spring", stiffness: 320, damping: 30 }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between gap-4 border-b-2 border-ink bg-paper px-5 py-4 sm:px-7">
+            <div className="flex items-center justify-between gap-4 border-b border-white/10 bg-iron px-5 py-4 sm:px-7">
               <div className="flex items-center gap-2.5">
-                <span className="grid size-8 place-items-center rounded-lg bg-ink text-orange">
-                  <HouseMark className="size-4" />
-                </span>
+                <ScaleMark className="size-8" />
                 <p className="font-display text-xs font-black tracking-[0.16em]">
                   {done ? "ALL DONE" : `STEP ${step + 1} / ${TOTAL}`}
                 </p>
@@ -131,7 +142,7 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
               <button
                 type="button"
                 onClick={onClose}
-                className="grid size-9 place-items-center rounded-full border-2 border-ink bg-cream transition-colors hover:bg-yellow"
+                className="grid size-9 place-items-center rounded-full border border-white/20 transition-colors hover:border-red hover:bg-red hover:text-white"
                 aria-label="Close"
               >
                 <Close className="size-4" />
@@ -141,9 +152,9 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
             {/* Progress */}
             <div className="flex gap-1.5 px-5 pt-4 sm:px-7" aria-hidden="true">
               {Array.from({ length: TOTAL }).map((_, i) => (
-                <span key={i} className="h-2 flex-1 overflow-hidden rounded-full border-2 border-ink bg-paper">
+                <span key={i} className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
                   <motion.span
-                    className="block h-full bg-orange"
+                    className="block h-full bg-red"
                     initial={false}
                     animate={{ width: done || i < step ? "100%" : i === step ? "50%" : "0%" }}
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -181,11 +192,11 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
                       <h2 id={titleId} className="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">
                         {wizard.contactTitle}
                       </h2>
-                      <p className="mt-1.5 text-sm font-medium text-ink/60">{wizard.contactHint}</p>
+                      <p className="mt-1.5 text-sm font-medium text-bone/55">{wizard.contactHint}</p>
 
                       <div className="mt-4 flex flex-wrap gap-2">
                         {[answers.service, answers.budget].filter(Boolean).map((a) => (
-                          <span key={a} className="rounded-full border-2 border-ink bg-yellow px-3 py-1 font-display text-[0.65rem] font-black tracking-wide">
+                          <span key={a} className="rounded-full bg-red px-3 py-1 font-display text-[0.65rem] font-black tracking-wide text-white">
                             {a.toUpperCase()}
                           </span>
                         ))}
@@ -249,9 +260,9 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
                       </div>
 
                       {status === "error" && (
-                        <div className="mt-4 rounded-xl border-2 border-ink bg-orange/10 px-4 py-3 text-sm font-semibold">
+                        <div className="mt-4 rounded-xl border border-red/50 bg-red/10 px-4 py-3 text-sm font-semibold">
                           {error}{" "}
-                          <a href={whatsappLink(summary)} target="_blank" rel="noreferrer" className="underline decoration-orange decoration-2 underline-offset-2">
+                          <a href={whatsappLink(summary)} target="_blank" rel="noreferrer" className="underline decoration-red decoration-2 underline-offset-2">
                             Message us on WhatsApp instead →
                           </a>
                         </div>
@@ -262,7 +273,7 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
                         <button
                           type="submit"
                           disabled={status === "sending"}
-                          className="inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3.5 font-display text-sm font-bold text-cream shadow-[4px_4px_0_0_#ff4d00] transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+                          className="inline-flex items-center gap-2 rounded-full bg-red px-6 py-3.5 font-display text-sm font-bold text-white shadow-pop-deep transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-red-bright disabled:opacity-60"
                         >
                           {status === "sending" ? "SENDING…" : "SEND IT"}
                           <ArrowRight className="size-4" />
@@ -275,7 +286,7 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
                     <div className="relative py-4 text-center">
                       <Confetti />
                       <motion.span
-                        className="mx-auto grid size-20 place-items-center rounded-full border-2 border-ink bg-orange text-cream shadow-[4px_4px_0_0_#141414]"
+                        className="mx-auto grid size-20 place-items-center rounded-full bg-red text-white shadow-[0_0_40px_rgba(227,18,28,0.55)]"
                         initial={{ scale: 0, rotate: -40 }}
                         animate={{ scale: 1, rotate: 0 }}
                         transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.1 }}
@@ -285,18 +296,18 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
                       <h2 id={titleId} className="mt-6 font-display text-3xl font-black uppercase tracking-tight">
                         {wizard.successTitle}
                       </h2>
-                      <p className="mx-auto mt-2 max-w-sm text-sm font-medium text-ink/65 sm:text-base">{wizard.successBody}</p>
+                      <p className="mx-auto mt-2 max-w-sm text-sm font-medium text-bone/65 sm:text-base">{wizard.successBody}</p>
                       <div className="mt-7 flex flex-col items-center gap-3">
                         <a
                           href={whatsappLink(summary)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-2.5 rounded-full border-2 border-ink bg-[#25D366] px-6 py-3.5 font-display text-sm font-bold text-ink shadow-[4px_4px_0_0_#141414] transition-transform hover:-translate-y-0.5"
+                          className="inline-flex items-center gap-2.5 rounded-full bg-bone px-6 py-3.5 font-display text-sm font-bold text-ink shadow-pop transition-transform hover:-translate-y-0.5"
                         >
                           <WhatsAppIcon className="size-5" />
                           CAN&apos;T WAIT? PING US ON WHATSAPP
                         </a>
-                        <button type="button" onClick={onClose} className="font-display text-xs font-bold tracking-[0.14em] text-ink/55 underline-offset-4 hover:underline">
+                        <button type="button" onClick={onClose} className="font-display text-xs font-bold tracking-[0.14em] text-bone/50 underline-offset-4 hover:underline">
                           CLOSE
                         </button>
                       </div>
@@ -313,14 +324,14 @@ export function ProjectWizard({ open, onClose, source }: { open: boolean; onClos
 }
 
 const inputClass =
-  "w-full rounded-xl border-2 border-ink bg-paper px-4 py-3 text-[15px] font-medium outline-none transition-shadow placeholder:text-ink/35 focus:shadow-[3px_3px_0_0_#ff4d00]";
+  "w-full rounded-xl border border-white/15 bg-ink px-4 py-3 text-[15px] font-medium text-bone outline-none transition-[border-color,box-shadow] placeholder:text-bone/30 focus:border-red focus:shadow-pop-sm";
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="block">
       <span className="mb-1.5 block font-display text-[0.7rem] font-black tracking-[0.12em] uppercase">
         {label}
-        {required && <span className="text-orange"> *</span>}
+        {required && <span className="text-red-bright"> *</span>}
       </span>
       {children}
     </label>
@@ -332,7 +343,7 @@ function BackButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink px-4 py-2.5 font-display text-xs font-bold tracking-wide transition-colors hover:bg-paper"
+      className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2.5 font-display text-xs font-bold tracking-wide transition-colors hover:bg-white/5"
     >
       <ArrowLeft className="size-3.5" /> BACK
     </button>
@@ -361,7 +372,7 @@ function ChoiceStep({
       <h2 id={titleId} className="font-display text-2xl font-black uppercase tracking-tight sm:text-3xl">
         {title}
       </h2>
-      <p className="mt-1.5 text-sm font-medium text-ink/60">{hint}</p>
+      <p className="mt-1.5 text-sm font-medium text-bone/55">{hint}</p>
       <div className="mt-5 grid gap-2.5 sm:grid-cols-2">
         {options.map((o, i) => {
           const active = selected === o.value;
@@ -376,19 +387,19 @@ function ChoiceStep({
               whileTap={{ scale: 0.97 }}
               aria-pressed={active}
               className={cx(
-                "group relative flex items-center justify-between gap-3 rounded-2xl border-2 border-ink px-4 py-3.5 text-left transition-[background-color,transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_0_#141414]",
-                active ? "bg-ink text-cream" : "bg-paper hover:bg-yellow",
+                "group relative flex items-center justify-between gap-3 rounded-2xl border px-4 py-3.5 text-left transition-[background-color,transform,box-shadow,border-color] hover:-translate-y-0.5 hover:shadow-pop-sm",
+                active ? "border-red bg-red text-white" : "border-white/12 bg-iron hover:border-red",
                 options.length % 2 === 1 && i === options.length - 1 && "sm:col-span-2",
               )}
             >
               <span>
                 <span className="block font-display text-sm font-black tracking-tight uppercase">{o.value}</span>
-                <span className={cx("mt-0.5 block text-xs font-medium", active ? "text-cream/70" : "text-ink/55")}>{o.sub}</span>
+                <span className={cx("mt-0.5 block text-xs font-medium", active ? "text-white/80" : "text-bone/50")}>{o.sub}</span>
               </span>
               <span
                 className={cx(
                   "grid size-6 shrink-0 place-items-center rounded-full border-2",
-                  active ? "border-cream bg-orange text-cream" : "border-ink/30",
+                  active ? "border-white bg-ink text-white" : "border-white/25",
                 )}
               >
                 {active && <Check className="size-3.5" />}

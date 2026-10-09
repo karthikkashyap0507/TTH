@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
    Good enough for a small studio dashboard. No password set = admin off.
    ========================================================================== */
 
-export const ADMIN_COOKIE = "tth_admin";
+export const ADMIN_COOKIE = "tsh_admin";
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 const secret = () => process.env.ADMIN_SECRET || process.env.ADMIN_PASSWORD || "";

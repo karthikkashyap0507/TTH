@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 
-const COLORS = ["#ff4d00", "#ffc72e", "#141414", "#fffcf5"];
+const COLORS = ["#e3121c", "#ff3d46", "#f5f2ed", "#7a0910"];
 
 type Piece = { x: number; y: number; r: number; w: number; h: number; c: string; d: number; round: boolean };
 

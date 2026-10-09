@@ -51,18 +51,18 @@ export function Testimonials() {
   };
 
   return (
-    <section className="overflow-hidden bg-cream py-20 sm:py-28">
+    <section className="overflow-hidden bg-ink py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="font-display text-sm font-bold tracking-[0.2em] text-orange">NO FILTERS. NO EDITS.</p>
-              <h2 className="mt-3 font-display text-4xl font-black tracking-tight uppercase sm:text-6xl">
+              <p className="font-display text-sm font-bold tracking-[0.2em] text-red-bright">NO FILTERS. NO EDITS.</p>
+              <h2 className="mt-3 font-display text-4xl font-black tracking-tight text-bone uppercase sm:text-6xl">
                 Straight from the chats.
               </h2>
             </div>
             <div className="flex items-end gap-4">
-              <p className="max-w-xs text-sm font-medium text-ink/60">
+              <p className="max-w-xs text-sm font-medium text-bone/55">
                 Messages from clients, the way they landed in our inbox. Tap any card to read it properly.
               </p>
               {overflowing && (
@@ -136,7 +136,7 @@ function ScrollButton({
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className="grid size-11 place-items-center rounded-full border-2 border-ink bg-paper shadow-[3px_3px_0_0_#141414] transition-[transform,background-color,opacity] hover:-translate-y-0.5 hover:bg-yellow disabled:pointer-events-none disabled:opacity-30"
+      className="grid size-11 place-items-center rounded-full border border-white/20 bg-iron text-bone transition-[transform,background-color,border-color,opacity] hover:-translate-y-0.5 hover:border-red hover:bg-red hover:text-white disabled:pointer-events-none disabled:opacity-30"
     >
       {children}
     </button>
@@ -153,11 +153,11 @@ function ChatCard({ t, onOpen }: { t: Testimonial; onOpen: () => void }) {
       tabIndex={0}
       role="button"
       aria-label={`Read message from ${t.client}, ${t.business.toLowerCase()}`}
-      className="flex w-[18.5rem] shrink-0 flex-col overflow-hidden rounded-2xl border-2 border-ink bg-paper shadow-[5px_5px_0_0_rgba(0,0,0,0.08)] sm:w-[19.5rem]"
+      className="flex w-[18.5rem] shrink-0 flex-col overflow-hidden rounded-2xl border border-white/12 bg-iron text-bone transition-[border-color,box-shadow] duration-300 hover:border-red hover:shadow-pop sm:w-[19.5rem]"
     >
-      <div className={cx("relative flex aspect-[13/5] items-center justify-center overflow-hidden border-b-2 border-ink", toneClass[t.tone])}>
+      <div className={cx("relative flex aspect-[13/5] items-center justify-center overflow-hidden border-b border-white/10", toneClass[t.tone])}>
         <span className="font-display text-4xl font-black tracking-tighter opacity-90">{t.initials}</span>
-        <span className="absolute top-2.5 right-2.5 rounded-full border-2 border-ink bg-cream px-2.5 py-0.5 font-display text-[0.55rem] font-bold tracking-[0.12em] text-ink">
+        <span className="absolute top-2.5 right-2.5 rounded-full bg-ink/85 px-2.5 py-0.5 font-display text-[0.55rem] font-bold tracking-[0.12em] text-bone ring-1 ring-white/15">
           {t.platform}
         </span>
       </div>
@@ -165,13 +165,13 @@ function ChatCard({ t, onOpen }: { t: Testimonial; onOpen: () => void }) {
         <ChatWindow t={t} compact />
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
           {t.website ? (
-            <span className="truncate font-display text-xs font-black tracking-tight underline decoration-orange decoration-2 underline-offset-4">
+            <span className="truncate font-display text-xs font-black tracking-tight underline decoration-red decoration-2 underline-offset-4">
               {t.website}
             </span>
           ) : (
             <span className="truncate font-display text-xs font-black tracking-tight">{t.client}</span>
           )}
-          <span className="shrink-0 font-display text-[0.55rem] font-bold tracking-[0.12em] text-orange">{t.business}</span>
+          <span className="shrink-0 font-display text-[0.55rem] font-bold tracking-[0.12em] text-red-bright">{t.business}</span>
         </div>
       </div>
     </motion.article>
@@ -182,16 +182,16 @@ function ChatCard({ t, onOpen }: { t: Testimonial; onOpen: () => void }) {
 function ChatWindow({ t, compact = false }: { t: Testimonial; compact?: boolean }) {
   if (t.screenshot) {
     return (
-      <div className={cx("relative overflow-hidden rounded-xl border-2 border-ink", compact && "max-h-[300px]")}>
+      <div className={cx("relative overflow-hidden rounded-xl border border-white/12", compact && "max-h-[300px]")}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={t.screenshot} alt={`Message from ${t.client}`} className="w-full" loading="lazy" draggable={false} />
       </div>
     );
   }
   return (
-    <div className={cx("relative overflow-hidden rounded-xl border-2 border-ink", compact && "h-[260px]")}>
-      <div className="flex items-center gap-2 border-b-2 border-ink bg-[#1f2c33] px-3 py-2 text-white">
-        <span className="grid size-6 place-items-center rounded-full bg-white/15 font-display text-[0.55rem] font-black">{t.initials}</span>
+    <div className={cx("relative overflow-hidden rounded-xl border border-white/12", compact && "h-[260px]")}>
+      <div className="flex items-center gap-2 border-b border-white/10 bg-[#1c1c1c] px-3 py-2 text-white">
+        <span className="grid size-6 place-items-center rounded-full bg-red font-display text-[0.55rem] font-black">{t.initials}</span>
         <div className="min-w-0">
           <p className="truncate text-xs font-bold">{t.client}</p>
           <p className="text-[0.6rem] text-white/60">online</p>
@@ -200,8 +200,8 @@ function ChatWindow({ t, compact = false }: { t: Testimonial; compact?: boolean 
       <div
         className="flex flex-col gap-1.5 p-2.5"
         style={{
-          background: "#efe7dd",
-          backgroundImage: "radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px)",
+          background: "#0f0f0f",
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)",
           backgroundSize: "10px 10px",
           minHeight: compact ? "100%" : undefined,
         }}
@@ -210,19 +210,19 @@ function ChatWindow({ t, compact = false }: { t: Testimonial; compact?: boolean 
           <div
             key={i}
             className={cx(
-              "relative max-w-[85%] rounded-lg px-2.5 pt-1.5 pb-1 text-[13px] leading-snug text-[#111b21] shadow-[0_1px_0_rgba(0,0,0,0.12)]",
-              m.from === "client" ? "self-start rounded-tl-none bg-white" : "self-end rounded-tr-none bg-[#d9fdd3]",
+              "relative max-w-[85%] rounded-lg px-2.5 pt-1.5 pb-1 text-[13px] leading-snug text-white shadow-[0_1px_0_rgba(0,0,0,0.4)]",
+              m.from === "client" ? "self-start rounded-tl-none bg-[#262626]" : "self-end rounded-tr-none bg-red",
             )}
           >
             {m.text}
-            <span className="float-right mt-1 ml-2 inline-flex translate-y-0.5 items-center gap-0.5 text-[0.6rem] text-[#667781]">
+            <span className="float-right mt-1 ml-2 inline-flex translate-y-0.5 items-center gap-0.5 text-[0.6rem] text-white/55">
               {m.time}
-              {m.from === "us" && <DoubleTick className="h-2.5 w-3.5 text-[#53bdeb]" />}
+              {m.from === "us" && <DoubleTick className="h-2.5 w-3.5 text-white/85" />}
             </span>
           </div>
         ))}
       </div>
-      {compact && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#efe7dd] to-transparent" />}
+      {compact && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#0f0f0f] to-transparent" />}
     </div>
   );
 }
@@ -264,7 +264,7 @@ function Lightbox({
           aria-modal="true"
           aria-label={`Message from ${t.client}`}
         >
-          <div className="absolute inset-0 bg-ink/70 backdrop-blur-sm" onClick={onClose} />
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={onClose} />
           <motion.div
             key={index}
             className="relative w-full max-w-md"
@@ -273,11 +273,11 @@ function Lightbox({
             exit={{ y: 20, scale: 0.97, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
           >
-            <div className="overflow-hidden rounded-3xl border-2 border-ink bg-paper shadow-[8px_8px_0_0_#141414]">
-              <div className="flex items-center justify-between gap-3 border-b-2 border-ink px-5 py-3.5">
+            <div className="overflow-hidden rounded-3xl border border-white/15 bg-iron text-bone shadow-pop-lg">
+              <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-3.5">
                 <div className="min-w-0">
                   <p className="truncate font-display text-sm font-black tracking-tight uppercase">{t.client}</p>
-                  <p className="font-display text-[0.6rem] font-bold tracking-[0.14em] text-orange">
+                  <p className="font-display text-[0.6rem] font-bold tracking-[0.14em] text-red-bright">
                     {t.business} · VIA {t.platform}
                   </p>
                 </div>
@@ -285,7 +285,7 @@ function Lightbox({
                   type="button"
                   onClick={onClose}
                   aria-label="Close"
-                  className="grid size-9 shrink-0 place-items-center rounded-full border-2 border-ink transition-colors hover:bg-yellow"
+                  className="grid size-9 shrink-0 place-items-center rounded-full border border-white/20 transition-colors hover:border-red hover:bg-red hover:text-white"
                 >
                   <Close className="size-4" />
                 </button>

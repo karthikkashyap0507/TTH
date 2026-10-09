@@ -2,7 +2,7 @@
   "name": "the-tech-house",
   "version": "1.0.0",
   "private": true,
-  "description": "The Tech House (TTH) — brand identity, websites and AI automation studio.",
+  "description": "The Scale House (TSH) — brand identity, websites and AI automation studio.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

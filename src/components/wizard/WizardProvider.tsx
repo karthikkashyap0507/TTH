@@ -3,8 +3,11 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { ProjectWizard } from "./ProjectWizard";
 
+/** Optional answers to fill in before the wizard opens (e.g. "Free account audit"). */
+export type WizardPreset = { service?: string };
+
 type WizardContextValue = {
-  open: (source?: string) => void;
+  open: (source?: string, preset?: WizardPreset) => void;
   close: () => void;
   isOpen: boolean;
 };
@@ -14,9 +17,11 @@ const WizardContext = createContext<WizardContextValue | null>(null);
 export function WizardProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [source, setSource] = useState("site");
+  const [preset, setPreset] = useState<WizardPreset | undefined>();
 
-  const open = useCallback((from?: string) => {
+  const open = useCallback((from?: string, presetAnswers?: WizardPreset) => {
     setSource(from ?? "site");
+    setPreset(presetAnswers);
     setIsOpen(true);
   }, []);
   const close = useCallback(() => setIsOpen(false), []);
@@ -26,7 +31,7 @@ export function WizardProvider({ children }: { children: ReactNode }) {
   return (
     <WizardContext.Provider value={value}>
       {children}
-      <ProjectWizard open={isOpen} onClose={close} source={source} />
+      <ProjectWizard open={isOpen} onClose={close} source={source} preset={preset} />
     </WizardContext.Provider>
   );
 }

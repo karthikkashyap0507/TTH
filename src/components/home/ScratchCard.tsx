@@ -3,13 +3,13 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Confetti } from "@/components/Confetti";
-import { HouseMark } from "@/components/icons";
+import { ScaleMark } from "@/components/icons";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 
-const STORAGE_KEY = "tth-services-revealed";
+const STORAGE_KEY = "tsh-services-revealed";
 const COLS = 28;
 const ROWS = 12;
-const REVEAL_AT = 0.48;
+const REVEAL_AT = 0.42;
 
 type Phase = "idle" | "scratching" | "revealed" | "gone";
 
@@ -166,7 +166,7 @@ export function ScratchCard({ className }: { className?: string }) {
   return (
     <div className={className}>
       <motion.div
-        className="absolute inset-0 z-20 overflow-hidden rounded-2xl border-2 border-ink shadow-[5px_5px_0_0_#141414]"
+        className="absolute inset-0 z-20 overflow-hidden rounded-2xl border border-white/15 shadow-pop"
         animate={phase === "revealed" ? { opacity: 0, scale: 1.04, filter: "blur(6px)" } : { opacity: 1, scale: 1 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         style={{ pointerEvents: phase === "revealed" ? "none" : "auto" }}
@@ -193,11 +193,11 @@ export function ScratchCard({ className }: { className?: string }) {
             aria-hidden="true"
           >
             <motion.span
-              className="absolute top-[12%] left-[6%] grid size-11 place-items-center rounded-full border-2 border-ink bg-yellow text-ink shadow-[3px_3px_0_0_#141414] sm:top-[58%] sm:left-[7%] sm:size-12"
+              className="absolute top-[12%] left-[6%] grid size-11 place-items-center rounded-full border-2 border-ink bg-red text-white shadow-[3px_3px_0_0_var(--color-bone)] sm:top-[58%] sm:left-[7%] sm:size-12"
               animate={{ x: ["0%", "180%", "0%"], y: ["0%", "-45%", "0%"], rotate: [-18, 18, -18] }}
               transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
             >
-              <HouseMark className="size-5" />
+              <ScaleMark variant="mono" className="size-5" />
             </motion.span>
           </motion.div>
         )}
@@ -214,7 +214,7 @@ export function ScratchCard({ className }: { className?: string }) {
       <button
         type="button"
         onClick={reveal}
-        className="sr-only z-50 rounded-full bg-ink px-5 py-3 font-display text-sm font-bold text-cream focus:not-sr-only focus:absolute focus:top-4 focus:left-4"
+        className="sr-only z-50 rounded-full bg-red px-5 py-3 font-display text-sm font-bold text-white focus:not-sr-only focus:absolute focus:top-4 focus:left-4"
       >
         Reveal all services
       </button>
@@ -231,37 +231,37 @@ function paintCover(ctx: CanvasRenderingContext2D, w: number, h: number, el: HTM
 
   // Base
   ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = "#141414";
+  ctx.fillStyle = "#0d0d0d";
   ctx.fillRect(0, 0, w, h);
 
   // Pattern of little houses + sparks
   const step = small ? 38 : 46;
   for (let row = 0, y = step / 2; y < h + step; row++, y += step) {
     for (let x = row % 2 ? step : step / 2; x < w + step; x += step) {
-      if ((Math.round(x / step) + row) % 3 === 0) drawHouse(ctx, x, y, small ? 7 : 8, "rgba(255,199,46,0.16)");
-      else drawSpark(ctx, x, y, small ? 3.2 : 4, "rgba(250,243,229,0.12)");
+      if ((Math.round(x / step) + row) % 3 === 0) drawHouse(ctx, x, y, small ? 7 : 8, "rgba(227,18,28,0.38)");
+      else drawSpark(ctx, x, y, small ? 3.2 : 4, "rgba(245,242,237,0.10)");
     }
   }
 
   // Soft vignette in the middle so the label pops
   const g = ctx.createRadialGradient(w / 2, h / 2, 10, w / 2, h / 2, Math.max(w, h) * 0.55);
-  g.addColorStop(0, "rgba(20,20,20,0.92)");
-  g.addColorStop(1, "rgba(20,20,20,0)");
+  g.addColorStop(0, "rgba(13,13,13,0.94)");
+  g.addColorStop(1, "rgba(13,13,13,0)");
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
 
   // Label
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillStyle = "#ff4d00";
+  ctx.fillStyle = "#ff3d46";
   ctx.font = `900 ${small ? 11 : 13}px ${display}`;
-  ctx.fillText("✦  THREE FLOORS INSIDE  ✦", w / 2, h / 2 - (small ? 44 : 64));
+  ctx.fillText("✦  SIX FLOORS INSIDE  ✦", w / 2, h / 2 - (small ? 44 : 64));
 
-  ctx.fillStyle = "#faf3e5";
+  ctx.fillStyle = "#f5f2ed";
   const big = small ? Math.min(34, w / 9) : Math.min(64, w / 13);
   ctx.font = `900 ${big}px ${display}`;
   ctx.fillText("WHAT'S INSIDE", w / 2, h / 2 - big * 0.3);
-  ctx.fillStyle = "#ffc72e";
+  ctx.fillStyle = "#ff3d46";
   ctx.fillText("THE HOUSE?", w / 2, h / 2 + big * 0.72);
 
   // Pill
@@ -271,9 +271,9 @@ function paintCover(ctx: CanvasRenderingContext2D, w: number, h: number, el: HTM
   const ph = small ? 28 : 34;
   const px = w / 2 - tw / 2;
   const py = h / 2 + big * 0.72 + (small ? 30 : 44);
-  roundRect(ctx, px + 3, py + 3, tw, ph, ph / 2, "#000000");
-  roundRect(ctx, px, py, tw, ph, ph / 2, "#faf3e5");
-  ctx.fillStyle = "#141414";
+  roundRect(ctx, px + 3, py + 3, tw, ph, ph / 2, "#e3121c");
+  roundRect(ctx, px, py, tw, ph, ph / 2, "#f5f2ed");
+  ctx.fillStyle = "#0a0a0a";
   ctx.fillText(label, w / 2, py + ph / 2 + 1);
 }
 
@@ -300,18 +300,18 @@ function drawSpark(ctx: CanvasRenderingContext2D, x: number, y: number, s: numbe
   ctx.fill();
 }
 
+/** A tiny silhouette of the TSH logo mark (same geometry as <ScaleMark>, centred on x/y). */
 function drawHouse(ctx: CanvasRenderingContext2D, x: number, y: number, s: number, color: string) {
-  ctx.beginPath();
-  ctx.moveTo(x - s, y - s * 0.1);
-  ctx.lineTo(x, y - s);
-  ctx.lineTo(x + s, y - s * 0.1);
-  ctx.moveTo(x - s * 0.7, y - s * 0.3);
-  ctx.lineTo(x - s * 0.7, y + s * 0.8);
-  ctx.lineTo(x + s * 0.7, y + s * 0.8);
-  ctx.lineTo(x + s * 0.7, y - s * 0.3);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.stroke();
+  const k = s / 50;
+  const p = (px: number, py: number): [number, number] => [x + (px - 50) * k, y + (py - 50) * k];
+  const shape = (pts: [number, number][]) => {
+    ctx.beginPath();
+    pts.forEach(([px, py], i) => (i ? ctx.lineTo(...p(px, py)) : ctx.moveTo(...p(px, py))));
+    ctx.closePath();
+    ctx.fill();
+  };
+  ctx.fillStyle = color;
+  shape([[50, 5.4], [95, 94.7], [77.7, 94.7], [41.2, 22.5]]);
+  shape([[5, 94.7], [41.2, 22.5], [50, 39.8], [22.3, 94.7]]);
+  shape([[37.5, 84.8], [62.5, 84.8], [62.5, 94.7], [37.5, 94.7]]);
 }

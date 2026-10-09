@@ -1,6 +1,6 @@
-# The Tech House (TTH) — website
+# The Scale House (TSH) — website
 
-Studio website for **The Tech House**: brand identity, websites and AI automation.
+Studio website for **The Scale House**: brand identity, websites and AI automation.
 Built with Next.js 16 (App Router), React 19, Tailwind CSS 4 and Motion.
 
 ---
@@ -24,13 +24,11 @@ npm start
 | Page | What it does |
 | --- | --- |
 | `/` | Hero with draggable, throwable stickers and a rotating outlined headline, a spinning badge, a services marquee, a **scratch-to-reveal** services card, featured work, a chat-style testimonial carousel with a lightbox, count-up stats, the process, the team and a contact CTA |
+| `/results` | The Ecom Performance System + four case studies from the company profile, with zoomable Meta Ads Manager screenshots |
 | `/work` | Filterable portfolio with animated "live site" previews in mini browser windows |
-| `/why-us` | Short article with five animated illustrations |
-| `/about` | Story, marquee, stats and detailed team cards |
-| `/careers` | Open roles, how hiring works |
-| `/careers/[role]` | Role details + full application form (skills chips, links, intro video) |
-| `/status` | Applicants check their status with application ID + email |
-| `/admin` | Password-protected dashboard: project enquiries + applications, status updates, private notes, CSV export |
+| `/why-us` | Six reasons brands choose TSH, then a short article with five animated illustrations |
+| `/about` | Company story, founder's message, marquee, stats and team cards |
+| `/admin` | Password-protected dashboard: project enquiries, search, one-tap WhatsApp reply, CSV export |
 
 The **Start a project** button (navbar, hero, CTAs) opens a three-step wizard.
 It saves the enquiry and then offers a pre-filled WhatsApp chat.
@@ -41,9 +39,9 @@ Almost all text lives in a handful of files. You don't need to touch the compone
 
 | File | Contents |
 | --- | --- |
-| `src/content/site.ts` | Brand name, contact details, socials, hero, services, **projects**, **testimonials**, **stats**, process, **team**, about page, CTA copy |
-| `src/content/careers.ts` | Open roles, hiring steps, perks, application statuses |
-| `src/content/why-us.ts` | The Why Us article |
+| `src/content/site.ts` | Brand name, **tagline**, contact details, socials, hero, services, **projects**, **clients**, **testimonials**, **stats**, process, **team**, about page, CTA copy |
+| `src/content/results.ts` | The Ecom Performance System and the four case studies (numbers, story, screenshots) |
+| `src/content/why-us.ts` | Why Us reasons + article |
 | `src/content/wizard.ts` | The "start a project" questions and budget ranges |
 
 Images go in `public/` (for example `public/work/my-project.jpg`). Reference them as `/work/my-project.jpg`.
@@ -52,12 +50,33 @@ Images go in `public/` (for example `public/work/my-project.jpg`). Reference the
 
 Everything marked `✏️ REPLACE` in `src/content/site.ts`:
 
-- [ ] **Contact**: `email`, `whatsapp` number, Instagram and LinkedIn links
-- [ ] **Projects**: the eight entries are samples with made-up names. Swap in real TTH client work. Add `url` for live sites, and optionally an `image` or a short screen-recording `video`.
+- [ ] **Socials**: real Instagram and LinkedIn links (phone, email and WhatsApp are already set from the company profile)
+- [ ] **Projects**: four real client sites are in. Add more by dropping a screenshot in `public/work/` and copying an entry.
 - [ ] **Testimonials**: use real client messages, with their permission. Type them out, or set `screenshot` to an image in `public/reviews/`.
-- [ ] **Stats**: your real numbers
-- [ ] **Team**: real names, roles, photos (`public/team/...`), socials and facts
+- [ ] **Case-study numbers**: a few figures in the company profile disagree with its own screenshots (see "Content notes" below) — confirm which are right
+- [ ] **Founding year**: the profile says January 2023 in one place and January 2022 in another, so the site doesn't mention a year yet
+- [ ] **Team**: real names (incl. the founder's name for the founder's message), roles, photos (`public/team/...`), socials and facts
 - [ ] `NEXT_PUBLIC_SITE_URL`: your domain (see below)
+
+## Content notes
+
+Copy, numbers and images come from **The Scale House company profile (2026)** and the brand assets in the project folder:
+
+- Service icons: `public/services/` (cut from the icon sheet, transparent background)
+- Case-study screenshots and before/after graphics: `public/results/`
+- Tagline ("The performance partner behind your favorite fashion brands.") and the 18-brand client list (a single sliding strip) live in `src/content/site.ts`. To show real client logos later, drop them in `public/clients/`.
+- The social share image uses Archivo Black from `assets/fonts/` (SIL Open Font License, see `assets/fonts/OFL.txt`)
+- The logo is redrawn as a vector in `src/components/icons.tsx` (`ScaleMark`)
+- The original PDF and WhatsApp images stay in the project root and are git-ignored
+
+Numbers to double-check in the profile:
+
+| Case | Profile text | Its "after" screenshot |
+| --- | --- | --- |
+| 3 | 6.45X blended ROAS, ₹26.74 CPM | 6.65 average ROAS, ₹26.34 CPM |
+| 4 | 5.40X ROAS, 442 purchases, ₹42.26 CPM, ₹1,90,280 spend before | 5.88 average ROAS, 2,272 purchases, ₹32.91 CPM; ₹1,90,880 spend in the before screenshot |
+
+The big number tiles on the site only use figures that don't conflict.
 
 ## Environment variables
 
@@ -68,10 +87,10 @@ Copy `.env.example` to `.env.local` and fill in what you need:
 | `NEXT_PUBLIC_SITE_URL` | SEO, sitemap, social share cards |
 | `ADMIN_PASSWORD` | Turns on `/admin`. Leave empty to disable it. |
 | `ADMIN_SECRET` | Optional long random string for signing admin sessions |
-| `NOTIFY_WEBHOOK_URL` | Optional instant alerts for new enquiries and applications (Slack, Discord, Google Chat, Zapier, Make, n8n) |
+| `NOTIFY_WEBHOOK_URL` | Optional instant alerts for new enquiries (Slack, Discord, Google Chat, Zapier, Make, n8n) |
 | `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` | Needed on serverless hosts. See below. |
 
-### Where enquiries and applications are stored
+### Where enquiries are stored
 
 - **Default:** `.data/db.json` in the project folder. This is fine locally or on your own server/VPS (`npm run build && npm start`).
 - **Vercel / Netlify (serverless):** those hosts can't write files. Create a free Redis database at [upstash.com](https://upstash.com) and set the two `UPSTASH_*` variables. The site switches over automatically.
@@ -89,9 +108,9 @@ src/
   app/
     (site)/          marketing pages (share the navbar + footer)
     admin/           admin dashboard
-    api/             leads, applications, status, admin endpoints
+    api/             leads + admin endpoints
     opengraph-image  generated social share image
-  components/        UI (home/, work/, careers/, admin/, wizard/, …)
+  components/        UI (home/, results/, work/, admin/, wizard/, …)
   content/           ← all editable text and data
   lib/               storage, auth, validation, helpers
 ```
@@ -103,8 +122,8 @@ Push this folder to a **private GitHub repo** so it can't get lost again:
 ```bash
 git init
 git add .
-git commit -m "The Tech House website"
+git commit -m "The Scale House website"
 git branch -M main
-git remote add origin https://github.com/<you>/tth-website.git
+git remote add origin https://github.com/<you>/tsh-website.git
 git push -u origin main
 ```

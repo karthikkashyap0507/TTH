@@ -14,12 +14,48 @@ export type ArticleBlock =
 
 export type ArticleSection = { title: string; blocks: ArticleBlock[] };
 
-export const whyUs = {
+/* Top of the page — why brands choose us (from the company profile) */
+export const whyUsHero = {
   eyebrow: "WHY US",
+  titleTop: "You won't be another",
+  titleBottom: "account number.",
+  body: "We're performance specialists for fashion and apparel D2C brands — with an in-house tech team that builds the websites, apps, CRMs and automations your growth runs on.",
+};
+
+export const whyUsReasons = [
+  {
+    title: "Apparel specialists",
+    body: "Our team eats, sleeps and breathes apparel performance marketing. Every instinct is tuned for D2C fashion — not borrowed from selling gadgets or supplements.",
+  },
+  {
+    title: "A system, not a playbook",
+    body: "Our proprietary Ecom Performance System replaces guesswork with structured creative testing, account architecture and budget discipline.",
+  },
+  {
+    title: "Proof in the dashboard",
+    body: "Blended ROAS of 5.4x–11.83x for D2C clothing brands across India, and peak monthly client revenues of over ₹1.5 Cr.",
+  },
+  {
+    title: "Data over vanity metrics",
+    body: "Budget moves toward whatever the numbers prove, week over week — and weak spend gets cut before it adds up.",
+  },
+  {
+    title: "Results in 30–40 days",
+    body: "It starts with a free account audit and a tailored strategy session. Results typically show within 30 to 40 days of implementation.",
+  },
+  {
+    title: "Ads and tech under one roof",
+    body: "The team running your ads can also build your store, app, custom software, CRM or ERP — no hand-offs between five different vendors.",
+  },
+];
+
+/* The article below the reasons */
+export const whyUs = {
+  eyebrow: "FROM OUR BUILD TEAM",
   title: "Pretty websites are easy. We build ones that pay for themselves.",
   intro:
-    "Here are five things we fix on almost every business website we touch. None of them need a bigger ad budget — just better building.",
-  meta: "THE TECH HOUSE TEAM · 5 MIN READ",
+    "Ads bring the traffic; the website decides whether it buys. Here are five things we fix on almost every store we touch — none of them need a bigger ad budget, just better building.",
+  meta: "THE SCALE HOUSE TEAM · 5 MIN READ",
   closingEyebrow: "SOUND FAMILIAR?",
 };
 

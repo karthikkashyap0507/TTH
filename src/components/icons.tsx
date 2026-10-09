@@ -1,23 +1,51 @@
-import type { SVGProps } from "react";
+import { useId, type SVGProps } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
 
-/** TTH mark — a house whose door is a text cursor. */
-export function HouseMark(props: IconProps) {
+/* The Scale House logo, redrawn as a vector: a red roof ("Λ") whose left leg
+   folds under the right one, with a bar beneath. */
+const MARK = {
+  right: "M50 5.4 95 94.7H77.7L41.2 22.5Z",
+  left: "M5 94.7 41.2 22.5 50 39.8 22.3 94.7Z",
+  bar: { x: 37.5, y: 84.8, width: 25, height: 9.9 },
+};
+
+/**
+ * TSH logo mark.
+ * - `variant="brand"` (default): the official red gradients.
+ * - `variant="mono"`: one colour (`currentColor`) — for use on red or light surfaces.
+ */
+export function ScaleMark({ variant = "brand", ...props }: IconProps & { variant?: "brand" | "mono" }) {
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  if (variant === "mono") {
+    return (
+      <svg viewBox="0 0 100 100" fill="currentColor" aria-hidden="true" {...props}>
+        <path d={MARK.left} opacity={0.72} />
+        <path d={MARK.right} />
+        <rect {...MARK.bar} />
+      </svg>
+    );
+  }
   return (
-    <svg
-      viewBox="0 0 64 64"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={7}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
-      <path d="M7 30 32 8l25 22" />
-      <path d="M15 26v29h34V26" />
-      <path d="M32 38v17" className="animate-blink" />
+    <svg viewBox="0 0 100 100" aria-hidden="true" {...props}>
+      <defs>
+        <linearGradient id={`${uid}r`} x1="0.35" y1="0" x2="0.75" y2="1">
+          <stop offset="0" stopColor="#ff0f2c" />
+          <stop offset="1" stopColor="#ff3242" />
+        </linearGradient>
+        <linearGradient id={`${uid}l`} x1="0.9" y1="0" x2="0.2" y2="1">
+          <stop offset="0" stopColor="#c64752" />
+          <stop offset="0.45" stopColor="#f2303f" />
+          <stop offset="1" stopColor="#ff2a3a" />
+        </linearGradient>
+        <linearGradient id={`${uid}b`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#ff4a55" />
+          <stop offset="1" stopColor="#ff1d2f" />
+        </linearGradient>
+      </defs>
+      <path d={MARK.left} fill={`url(#${uid}l)`} />
+      <path d={MARK.right} fill={`url(#${uid}r)`} />
+      <rect {...MARK.bar} fill={`url(#${uid}b)`} />
     </svg>
   );
 }
@@ -91,14 +119,14 @@ export function InstagramIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
       <defs>
-        <linearGradient id="tth-ig" x1="0%" y1="100%" x2="100%" y2="0%">
+        <linearGradient id="tsh-ig" x1="0%" y1="100%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#feda75" />
           <stop offset="30%" stopColor="#fa7e1e" />
           <stop offset="60%" stopColor="#d62976" />
           <stop offset="100%" stopColor="#4f5bd5" />
         </linearGradient>
       </defs>
-      <rect width="24" height="24" rx="6.5" fill="url(#tth-ig)" />
+      <rect width="24" height="24" rx="6.5" fill="url(#tsh-ig)" />
       <rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" strokeWidth="1.8" />
       <circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" strokeWidth="1.8" />
       <circle cx="16.3" cy="7.7" r="1" fill="#fff" />
@@ -139,9 +167,38 @@ export function WhatsAppIcon(props: IconProps) {
 export function MailIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
-      <rect width="24" height="24" rx="6" fill="#ff4d00" />
+      <rect width="24" height="24" rx="6" fill="#e3121c" />
       <rect x="5" y="7" width="14" height="10" rx="1.8" fill="none" stroke="#fff" strokeWidth="1.8" />
       <path d="m5.8 8 6.2 4.8L18.2 8" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function PhoneIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
+      <rect width="24" height="24" rx="6" fill="#262626" />
+      <path
+        d="M8.6 5.6c.4-.3 1-.3 1.3.1l1.6 2.1c.3.4.3.9 0 1.3l-.9 1.1c.6 1.3 1.6 2.3 2.9 2.9l1.1-.9c.4-.3.9-.3 1.3 0l2.1 1.6c.4.3.4.9.1 1.3l-1 1.2c-.6.7-1.6 1-2.5.7-3.4-1.1-6.1-3.8-7.2-7.2-.3-.9 0-1.9.7-2.5l.5-.6Z"
+        fill="#fff"
+      />
+    </svg>
+  );
+}
+
+export function PauseIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <rect x="6" y="5" width="4" height="14" rx="1.2" />
+      <rect x="14" y="5" width="4" height="14" rx="1.2" />
+    </svg>
+  );
+}
+
+export function PlayIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M8 5.6v12.8a1 1 0 0 0 1.5.86l10.2-6.4a1 1 0 0 0 0-1.72L9.5 4.74A1 1 0 0 0 8 5.6Z" />
     </svg>
   );
 }

@@ -12,10 +12,17 @@ import {
 } from "motion/react";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { hero, type Tone } from "@/content/site";
-import { HouseMark } from "@/components/icons";
+import { ScaleMark } from "@/components/icons";
 import { useWizard } from "@/components/wizard/WizardProvider";
 import { usePrefersReducedMotion } from "@/lib/usePrefersReducedMotion";
 import { cx, toneClass } from "@/lib/tones";
+
+const stickerStyle: Record<Tone, { base: string; lifted: string }> = {
+  bone: { base: "border-ink shadow-pop", lifted: "shadow-[10px_10px_0_0_var(--color-red)]" },
+  red: { base: "border-ink shadow-pop-bone", lifted: "shadow-[10px_10px_0_0_var(--color-bone)]" },
+  ink: { base: "border-white/35 shadow-pop", lifted: "shadow-[10px_10px_0_0_var(--color-red)]" },
+  iron: { base: "border-white/25 shadow-pop", lifted: "shadow-[10px_10px_0_0_var(--color-red)]" },
+};
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -28,14 +35,32 @@ export function Hero() {
     <section
       id="top"
       ref={sectionRef}
-      className="dot-grid relative flex min-h-[78svh] flex-col justify-center overflow-hidden pt-24 pb-14 md:min-h-svh md:pt-28 md:pb-20"
+      className="dot-grid relative flex min-h-[78svh] flex-col justify-center overflow-hidden bg-ink pt-40 pb-14 sm:pt-32 md:min-h-svh md:pt-28 md:pb-20"
     >
+      {/* soft red glow behind the headline */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-[20%] right-[-10%] size-[60vw] max-w-[820px] animate-glow rounded-full bg-[radial-gradient(circle,rgba(227,18,28,0.32),transparent_62%)] blur-2xl" />
+        <div className="absolute bottom-[-30%] left-[-15%] size-[50vw] max-w-[700px] animate-glow rounded-full bg-[radial-gradient(circle,rgba(227,18,28,0.18),transparent_65%)] blur-2xl [animation-delay:-3s]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink to-transparent" />
+      </div>
       {hero.stickers.map((s, i) => (
         <Sticker key={s.label} {...s} delay={1 + i * 0.16} bounds={sectionRef} />
       ))}
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
-        <h1 className="font-display text-[clamp(2.3rem,11.2vw,8.4rem)] leading-[0.98] font-black tracking-tight whitespace-nowrap uppercase">
+        <motion.p
+          className="mb-4 inline-flex max-w-full items-start gap-2 rounded-2xl border border-white/15 bg-white/[0.04] px-3 py-1.5 font-display text-[0.6rem] leading-relaxed font-bold tracking-[0.16em] text-bone/85 uppercase backdrop-blur sm:mb-6 sm:items-center sm:rounded-full sm:px-4 sm:text-xs sm:tracking-[0.18em]"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease, delay: 0.05 }}
+        >
+          <span className="relative mt-[0.3rem] flex size-2 shrink-0 sm:mt-0">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red opacity-70" />
+            <span className="relative inline-flex size-2 rounded-full bg-red" />
+          </span>
+          <span>{hero.eyebrow.replace(/\.$/, "")}</span>
+        </motion.p>
+        <h1 className="font-display text-[clamp(2.3rem,11.2vw,8.4rem)] leading-[0.98] font-black tracking-tight whitespace-nowrap text-bone uppercase">
           <span className="sr-only">
             {hero.lead} {hero.rotating.join(", ")} — {hero.tail}
           </span>
@@ -52,7 +77,7 @@ export function Hero() {
             </span>
             <RotatingWord words={hero.rotating} reduce={reduce} />
             <motion.span
-              className="block text-orange"
+              className="block text-red-bright"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease, delay: 0.45 }}
@@ -69,20 +94,20 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease, delay: 0.6 }}
           >
-            <p className="text-base leading-relaxed font-medium sm:text-lg">{hero.body}</p>
+            <p className="text-base leading-relaxed font-medium text-bone/70 sm:text-lg">{hero.body}</p>
             <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
               <button
                 type="button"
                 onClick={() => open("hero")}
-                className="rounded-full bg-ink px-6 py-3.5 font-display text-sm font-bold text-cream shadow-[5px_5px_0_0_#ff4d00] transition-transform hover:-translate-y-0.5 active:translate-y-0 sm:px-8 sm:py-4 sm:text-base"
+                className="rounded-full bg-red px-6 py-3.5 font-display text-sm font-bold text-white shadow-pop-deep transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-red-bright active:translate-y-0 sm:px-8 sm:py-4 sm:text-base"
               >
                 START A PROJECT
               </button>
               <Link
-                href="/#work"
-                className="rounded-full border-2 border-ink bg-paper px-6 py-3.5 font-display text-sm font-bold transition-colors hover:bg-yellow sm:px-8 sm:py-4 sm:text-base"
+                href="/results"
+                className="rounded-full border-2 border-white/25 px-6 py-3.5 font-display text-sm font-bold text-bone transition-colors hover:border-white/60 hover:bg-white/5 sm:px-8 sm:py-4 sm:text-base"
               >
-                SEE OUR WORK
+                SEE RESULTS
               </Link>
             </div>
           </motion.div>
@@ -98,7 +123,7 @@ export function Hero() {
         </div>
 
         <motion.p
-          className="mt-8 font-display text-[0.6rem] font-bold tracking-[0.2em] text-ink/45 sm:mt-12 sm:text-xs"
+          className="mt-8 font-display text-[0.6rem] font-bold tracking-[0.2em] text-bone/40 sm:mt-12 sm:text-xs"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 2 }}
@@ -220,8 +245,9 @@ function Sticker({
       >
         <div
           className={cx(
-            "flex items-center rounded-full border-2 border-ink px-4 py-2 font-display text-sm font-black tracking-tight whitespace-nowrap shadow-[4px_4px_0_0_#141414] transition-shadow sm:px-6 sm:py-3 sm:text-lg sm:shadow-[5px_5px_0_0_#141414]",
-            lifted && "shadow-[9px_9px_0_0_#141414] sm:shadow-[10px_10px_0_0_#141414]",
+            "flex items-center rounded-full border-2 px-4 py-2 font-display text-sm font-black tracking-tight whitespace-nowrap transition-shadow sm:px-6 sm:py-3 sm:text-lg",
+            stickerStyle[tone].base,
+            lifted && stickerStyle[tone].lifted,
             toneClass[tone],
           )}
         >
@@ -240,17 +266,17 @@ function SpinningBadge({ text }: { text: string }) {
     <div className="relative grid size-32 place-items-center lg:size-36">
       <svg viewBox="0 0 120 120" className="absolute inset-0 animate-spin-slow" aria-hidden="true">
         <defs>
-          <path id="tth-badge-circle" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" />
+          <path id="tsh-badge-circle" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0" />
         </defs>
-        <text className="fill-ink font-display text-[11px] font-bold">
+        <text className="fill-bone font-display text-[11px] font-bold">
           {/* 2πr ≈ 289 — stretch the text so it wraps the circle exactly once */}
-          <textPath href="#tth-badge-circle" textLength="287" lengthAdjust="spacing">
+          <textPath href="#tsh-badge-circle" textLength="287" lengthAdjust="spacing">
             {text}
           </textPath>
         </text>
       </svg>
-      <span className="grid size-14 place-items-center rounded-full border-2 border-ink bg-orange text-cream shadow-[3px_3px_0_0_#141414]">
-        <HouseMark className="size-7" />
+      <span className="grid size-16 place-items-center rounded-full border border-white/15 bg-ink shadow-[0_0_36px_rgba(227,18,28,0.45)]">
+        <ScaleMark className="size-9" />
       </span>
     </div>
   );
