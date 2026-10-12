@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { about, team } from "@/content/site";
+import { about, igHandle, team } from "@/content/site";
 import { Reveal } from "@/components/Reveal";
 import { Marquee } from "@/components/Marquee";
 import { Stats } from "@/components/Stats";
@@ -48,23 +48,23 @@ export default function AboutPage() {
       <Marquee />
       <Stats />
 
-      <section id="founder" className="scroll-mt-20 border-b border-white/10 bg-coal">
+      <section id="founder" className="scroll-mt-20 border-b border-ink/10 bg-white text-ink">
         <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-24">
           <Reveal>
-            <p className="font-display text-sm font-bold tracking-[0.2em] text-red-bright">{about.founderEyebrow}</p>
-            <h2 className="mt-2 font-display text-4xl font-black tracking-tight text-bone uppercase sm:text-5xl">{about.founderTitle}</h2>
+            <p className="font-display text-sm font-bold tracking-[0.2em] text-red">{about.founderEyebrow}</p>
+            <h2 className="mt-2 font-display text-4xl font-black tracking-tight uppercase sm:text-5xl">{about.founderTitle}</h2>
           </Reveal>
           <Reveal>
-            <figure className="relative mt-10 rounded-3xl border border-white/12 bg-iron p-6 pt-12 shadow-pop sm:p-10 sm:pt-14">
+            <figure className="relative mt-10 rounded-3xl border border-ink/10 bg-bone p-6 pt-12 shadow-pop sm:p-10 sm:pt-14">
               <span aria-hidden="true" className="absolute -top-7 left-6 font-display text-[6.5rem] leading-none font-black text-red sm:left-10">“</span>
-              <blockquote className="space-y-4 text-base leading-[1.8] font-medium text-bone/80 sm:text-lg">
+              <blockquote className="space-y-4 text-base leading-[1.8] font-medium text-ink/75 sm:text-lg">
                 {about.founderMessage.map((p) => (
                   <p key={p.slice(0, 24)}>{p}</p>
                 ))}
               </blockquote>
-              <figcaption className="mt-8 flex items-center gap-3 border-t border-white/10 pt-6">
+              <figcaption className="mt-8 flex items-center gap-3 border-t border-ink/10 pt-6">
                 <ScaleMark className="size-9" />
-                <span className="font-display text-xs font-black tracking-[0.18em] text-bone">{about.founderSignature}</span>
+                <span className="font-display text-xs font-black tracking-[0.18em] text-ink">{about.founderSignature}</span>
               </figcaption>
             </figure>
           </Reveal>
@@ -72,17 +72,22 @@ export default function AboutPage() {
       </section>
 
       <section id="team" className="mx-auto max-w-7xl scroll-mt-20 px-4 py-16 sm:px-6 sm:py-24">
-        <Reveal>
+        <Reveal className="mx-auto max-w-4xl">
           <p className="font-display text-sm font-bold tracking-[0.2em] text-red-bright">{about.teamEyebrow}</p>
           <h2 className="mt-2 font-display text-4xl font-black tracking-tight uppercase sm:text-5xl">{about.teamTitle}</h2>
           <p className="mt-3 max-w-md text-sm font-medium text-bone/55 sm:text-base">{about.teamBody}</p>
         </Reveal>
 
-        <div className="mx-auto mt-10 grid max-w-4xl gap-6 md:grid-cols-2">
+        <div className="mx-auto mt-10 grid max-w-4xl gap-6">
           {team.map((m, i) => (
             <Reveal key={m.name} delay={i * 0.1}>
-              <article className="group flex h-full flex-col overflow-hidden rounded-3xl border border-white/12 bg-iron text-bone shadow-pop transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-pop-lg">
-                <div className={cx("relative aspect-[4/5] w-full overflow-hidden border-b border-white/10", toneClass[m.tone])}>
+              <article className="group grid overflow-hidden rounded-3xl border border-white/12 bg-iron text-bone shadow-pop transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-pop-lg md:grid-cols-[2fr_3fr]">
+                <div
+                  className={cx(
+                    "relative aspect-[4/3] w-full overflow-hidden border-b border-white/10 md:aspect-auto md:min-h-[22rem] md:border-r md:border-b-0",
+                    toneClass[m.tone],
+                  )}
+                >
                   {m.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -105,13 +110,13 @@ export default function AboutPage() {
                     {m.role}
                   </span>
                 </div>
-                <div className="flex flex-1 flex-col p-5 sm:p-6">
-                  <h3 className="font-display text-2xl font-black tracking-tight sm:text-[1.7rem]">{m.name}</h3>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {m.instagram && <SocialPill href={m.instagram} label="INSTAGRAM" Icon={InstagramIcon} />}
+                <div className="flex flex-col justify-center p-6 sm:p-8">
+                  <h3 className="font-display text-3xl font-black tracking-tight uppercase sm:text-4xl">{m.name}</h3>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {m.instagram && <SocialPill href={m.instagram} label={igHandle(m.instagram).toUpperCase()} Icon={InstagramIcon} />}
                     {m.linkedin && <SocialPill href={m.linkedin} label="LINKEDIN" Icon={LinkedInIcon} />}
                   </div>
-                  <p className="mt-5 font-display text-[0.65rem] font-bold tracking-[0.2em] text-red-bright">{about.factsLabel}</p>
+                  <p className="mt-6 font-display text-[0.65rem] font-bold tracking-[0.2em] text-red-bright">{about.factsLabel}</p>
                   <ul className="mt-2 flex flex-col gap-2 border-t border-white/10 pt-3">
                     {m.facts.map((f) => (
                       <li key={f} className="flex items-start gap-2.5 font-display text-xs leading-relaxed font-bold tracking-wide">

@@ -62,17 +62,21 @@ export default function WhyUsPage() {
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed font-medium text-bone/65 sm:text-lg">{whyUsHero.body}</p>
           </Reveal>
+        </div>
+      </section>
 
-          <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="border-b border-ink/10 bg-white text-ink">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20">
+          <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {whyUsReasons.map((r, i) => (
               <Reveal as="li" key={r.title} delay={(i % 3) * 0.06}>
-                <div className="group h-full rounded-2xl border border-white/12 bg-iron p-6 transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-red hover:shadow-pop">
+                <div className="group h-full rounded-2xl border border-ink/10 bg-white p-6 shadow-soft transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-red hover:shadow-pop">
                   <div className="flex items-center justify-between">
-                    <Spark className="size-5 text-red-bright transition-transform duration-500 group-hover:rotate-90" />
-                    <span className="font-display text-2xl font-black text-white/15">0{i + 1}</span>
+                    <Spark className="size-5 text-red transition-transform duration-500 group-hover:rotate-90" />
+                    <span className="font-display text-2xl font-black text-ink/15">0{i + 1}</span>
                   </div>
-                  <h2 className="mt-4 font-display text-lg font-black tracking-tight text-bone uppercase">{r.title}</h2>
-                  <p className="mt-1.5 text-sm leading-relaxed font-medium text-bone/60">{r.body}</p>
+                  <h2 className="mt-4 font-display text-lg font-black tracking-tight uppercase">{r.title}</h2>
+                  <p className="mt-1.5 text-sm leading-relaxed font-medium text-ink/60">{r.body}</p>
                 </div>
               </Reveal>
             ))}

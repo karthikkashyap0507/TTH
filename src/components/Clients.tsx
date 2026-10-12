@@ -6,7 +6,7 @@ import { PauseIcon, PlayIcon, Spark } from "./icons";
 import { cx } from "@/lib/tones";
 
 /* Alternating type treatments so plain names read like a strip of logos */
-const nameStyle = ["text-bone", "text-red-bright", "text-outline-thin"];
+const nameStyle = ["text-ink", "text-red", "text-outline-ink-thin"];
 
 const edgeFade: CSSProperties = {
   maskImage: "linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
@@ -25,19 +25,19 @@ export function Clients() {
       type="button"
       onClick={() => setPaused((p) => !p)}
       aria-label={paused ? "Play the client names" : "Pause the client names"}
-      className="grid size-8 shrink-0 place-items-center rounded-full border border-white/15 text-bone/70 transition-colors hover:border-red hover:bg-red hover:text-white"
+      className="grid size-8 shrink-0 place-items-center rounded-full border border-ink/15 text-ink/60 transition-colors hover:border-red hover:bg-red hover:text-white"
     >
       {paused ? <PlayIcon className="size-3.5" /> : <PauseIcon className="size-3.5" />}
     </button>
   );
 
   return (
-    <section id="clients" aria-label="Our clients" className="scroll-mt-20 border-b border-white/10 bg-ink">
+    <section id="clients" aria-label="Our clients" className="scroll-mt-20 border-y border-ink/10 bg-white text-ink">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:px-6 md:flex-row md:items-center md:gap-8 md:py-7">
-        <div className="flex shrink-0 items-center justify-between gap-4 md:border-r md:border-white/10 md:pr-8">
+        <div className="flex shrink-0 items-center justify-between gap-4 md:border-r md:border-ink/10 md:pr-8">
           <p className="font-display text-[0.65rem] leading-relaxed font-black tracking-[0.2em] sm:text-xs">
-            <span className="text-red-bright">{clientsIntro.eyebrow}</span>
-            <span className="text-bone/45 md:block">
+            <span className="text-red">{clientsIntro.eyebrow}</span>
+            <span className="text-ink/45 md:block">
               <span className="md:hidden"> · </span>
               {clients.length} {clientsIntro.countLabel}
             </span>
@@ -66,7 +66,7 @@ export function Clients() {
                 >
                   {name}
                 </span>
-                <Spark className="size-3 shrink-0 text-red/70" />
+                <Spark className="size-3 shrink-0 text-red/60" />
               </span>
             ))}
           </div>

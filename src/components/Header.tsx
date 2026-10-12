@@ -36,7 +36,7 @@ export function Header() {
     <header
       className={cx(
         "fixed inset-x-0 top-0 z-50 border-b backdrop-blur-md transition-colors duration-300",
-        scrolled || menuOpen ? "border-white/10 bg-ink/85" : "border-transparent bg-ink/40",
+        scrolled || menuOpen ? "border-white/10 bg-ink/95" : "border-transparent bg-ink/40",
       )}
     >
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6" aria-label="Main">

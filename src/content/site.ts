@@ -129,7 +129,7 @@ export const marqueeItems = [
 ];
 
 /* --------------------------------------------------------------------------
-   Services (home, scratch-card section)
+   Services (home)
    Icons live in /public/services/ (cut from the brand icon sheet).
    -------------------------------------------------------------------------- */
 export const servicesIntro = {
@@ -303,24 +303,39 @@ export const clients = [
    Either type out the messages, or set `screenshot` to an image in /public/reviews/.
    -------------------------------------------------------------------------- */
 export type Testimonial = {
-  client: string;
-  initials: string;
-  business: string;
-  website?: string;
+  /** Who the client is, e.g. "Clothing brand owner" — shown instead of a name */
+  role: string;
+  /** What we did for them, e.g. "META ADS + CREATIVES" */
+  work: string;
   platform: "WHATSAPP" | "INSTAGRAM" | "LINKEDIN" | "EMAIL";
-  tone: Tone;
   screenshot?: string;
   messages: { from: "client" | "us"; text: string; time: string }[];
 };
 
 export const testimonials: Testimonial[] = [
   {
-    client: "Client Name",
-    initials: "CN",
-    business: "JEWELLERY BRAND",
-    website: "clientwebsite.com",
+    role: "Clothing brand owner",
+    work: "META ADS + CREATIVES",
     platform: "WHATSAPP",
-    tone: "red",
+    messages: [
+      { from: "client", text: "This month's sales are already more than the whole of last quarter 🔥", time: "10:12 pm" },
+      { from: "us", text: "The new creatives are doing the heavy lifting 🙌", time: "10:14 pm" },
+      { from: "client", text: "Scale it up. Whatever budget you need.", time: "10:15 pm" },
+    ],
+  },
+  {
+    role: "Performance marketing client",
+    work: "META ADS",
+    platform: "WHATSAPP",
+    messages: [
+      { from: "client", text: "Ads Manager is finally green everywhere 😅", time: "9:05 am" },
+      { from: "client", text: "Best ROAS we've had since we started. Thank you team TSH!", time: "9:06 am" },
+    ],
+  },
+  {
+    role: "Website client",
+    work: "SHOPIFY WEBSITE",
+    platform: "WHATSAPP",
     messages: [
       { from: "client", text: "Just saw the new site on my phone 😍", time: "9:41 pm" },
       { from: "client", text: "It looks like a big brand now. Already got 3 enquiries from Instagram!", time: "9:42 pm" },
@@ -328,51 +343,30 @@ export const testimonials: Testimonial[] = [
     ],
   },
   {
-    client: "Client Name",
-    initials: "CN",
-    business: "D2C FOOD BRAND",
-    website: "clientwebsite.com",
+    role: "Automation client",
+    work: "WHATSAPP BOT",
     platform: "INSTAGRAM",
-    tone: "bone",
     messages: [
       { from: "client", text: "The WhatsApp bot replied to 40 customers last night while we were asleep", time: "8:02 am" },
       { from: "client", text: "Best money we've spent this year honestly", time: "8:03 am" },
     ],
   },
   {
-    client: "Client Name",
-    initials: "CN",
-    business: "FITNESS COACH",
+    role: "Ethnic wear label founder",
+    work: "STORE + CHECKOUT",
     platform: "WHATSAPP",
-    tone: "ink",
-    messages: [
-      { from: "client", text: "Logo is perfect. My clients keep asking who designed it", time: "1:15 pm" },
-      { from: "us", text: "Tell them it's built in-house 😉", time: "1:16 pm" },
-      { from: "client", text: "Haha done. Let's start the website next week", time: "1:18 pm" },
-    ],
-  },
-  {
-    client: "Client Name",
-    initials: "CN",
-    business: "HOME DECOR STORE",
-    website: "clientwebsite.com",
-    platform: "WHATSAPP",
-    tone: "red",
     messages: [
       { from: "client", text: "Orders are coming from Google now, not just Insta", time: "6:30 pm" },
       { from: "client", text: "And the checkout is so smooth. Thank you team TSH!", time: "6:31 pm" },
     ],
   },
   {
-    client: "Client Name",
-    initials: "CN",
-    business: "SERVICE BUSINESS",
-    website: "clientwebsite.com",
+    role: "CRM & ERP client",
+    work: "CUSTOM CRM",
     platform: "LINKEDIN",
-    tone: "bone",
     messages: [
       { from: "client", text: "Delivered two days before the deadline. Didn't even have to follow up once.", time: "11:20 am" },
-      { from: "client", text: "Recommending you to everyone in my network.", time: "11:21 am" },
+      { from: "client", text: "The whole team moved off spreadsheets in a week. Recommending you to everyone.", time: "11:21 am" },
     ],
   },
 ];
@@ -412,8 +406,8 @@ export const processSteps = [
 ];
 
 /* --------------------------------------------------------------------------
-   Team
-   ✏️ REPLACE — names, roles, photos (/public/team/...), socials and facts
+   Team — just the founder (there is no co-founder)
+   Optional: add a photo (/public/team/...) via `photo`, and a `linkedin` link.
    -------------------------------------------------------------------------- */
 export type TeamMember = {
   name: string;
@@ -428,32 +422,21 @@ export type TeamMember = {
 
 export const team: TeamMember[] = [
   {
-    name: "FOUNDER NAME",
-    initials: "FN",
+    name: "Chinmay Sharma",
+    initials: "CS",
     role: "FOUNDER — PERFORMANCE & GROWTH",
     tone: "red",
-    instagram: "https://www.instagram.com/",
-    linkedin: "https://www.linkedin.com/",
+    instagram: "https://www.instagram.com/chinmay.buildz/",
     facts: [
-      "HAS NEVER MISSED A LAUNCH DATE. NOT ONCE.",
-      "REPLIES FASTER THAN YOUR FOOD DELIVERY.",
-      "CAN TURN A VOICE NOTE INTO A FULL PROJECT PLAN.",
-    ],
-  },
-  {
-    name: "TEAM MEMBER NAME",
-    initials: "TM",
-    role: "HEAD OF TECH — WEB, APPS & AUTOMATION",
-    tone: "bone",
-    instagram: "https://www.instagram.com/",
-    linkedin: "https://www.linkedin.com/",
-    facts: [
-      "THINKS IN FIGMA, DREAMS IN TYPESCRIPT.",
-      "BELIEVES EVERY BUTTON HAS TO EARN ITS PLACE.",
-      "HAS A PLAYLIST FOR EVERY KIND OF BUG.",
+      "YEARS DEEP IN META ADS FOR D2C FASHION BRANDS.",
+      "STARTED WITH NO BIG OFFICE AND NO BIG TEAM — NOW LEADS 25+.",
+      "WORKS ONLY WITH CLOTHING & APPAREL BRANDS. ON PURPOSE.",
     ],
   },
 ];
+
+/** "https://www.instagram.com/chinmay.buildz/" → "@chinmay.buildz" */
+export const igHandle = (url: string) => `@${url.replace(/\/+$/, "").split("/").pop()}`;
 
 /* --------------------------------------------------------------------------
    About page — from the company profile
@@ -475,10 +458,10 @@ export const about = {
     "What we didn't expect was how fast that conviction would resonate. Today we're a 25+ strong team. But honestly, the growth isn't what I'm proudest of. I'm proudest that we've never diluted the focus — every client we work with is a clothing or apparel brand, because that's where our team's instincts are sharpest.",
     "If you're a fashion brand owner reading this, my promise to you is simple: you won't be another account number to us. You'll be working with a team that eats, sleeps and breathes apparel performance marketing.",
   ],
-  founderSignature: "— FOUNDER, THE SCALE HOUSE",
-  teamEyebrow: "THE HOUSEMATES",
-  teamTitle: "Meet the team",
-  teamBody: "A 25+ strong crew of media buyers, creatives, designers and engineers — and people who actually pick up the phone.",
+  founderSignature: "— CHINMAY SHARMA, FOUNDER, THE SCALE HOUSE",
+  teamEyebrow: "THE FOUNDER",
+  teamTitle: "Meet the founder",
+  teamBody: "Chinmay leads a 25+ strong crew of media buyers, creatives, designers and engineers — people who actually pick up the phone.",
   factsLabel: "THINGS YOU SHOULD KNOW",
 };
 

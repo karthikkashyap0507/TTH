@@ -6,7 +6,7 @@ import type { Project } from "@/content/site";
 import { ArrowUpRight, Plus } from "@/components/icons";
 import { useWizard } from "@/components/wizard/WizardProvider";
 import { cx } from "@/lib/tones";
-import { ProjectCover, SitePreview } from "./ProjectVisuals";
+import { SitePreview } from "./ProjectVisuals";
 
 export function WorkGrid({ projects }: { projects: Project[] }) {
   const categories = useMemo(() => ["ALL", ...Array.from(new Set(projects.map((p) => p.category)))], [projects]);
@@ -29,7 +29,7 @@ export function WorkGrid({ projects }: { projects: Project[] }) {
               onClick={() => setActive(c)}
               className={cx(
                 "relative rounded-full border px-3 py-1.5 font-display text-[0.6rem] font-black tracking-[0.08em] transition-colors sm:px-4 sm:py-2 sm:text-xs",
-                on ? "border-red text-white" : "border-white/15 text-bone/80 hover:border-red hover:text-white",
+                on ? "border-red text-white" : "border-ink/15 text-ink/75 hover:border-red hover:text-red",
               )}
             >
               {on && (
@@ -40,7 +40,7 @@ export function WorkGrid({ projects }: { projects: Project[] }) {
                 />
               )}
               <span className="relative">
-                {c} <span className={on ? "text-white/70" : "text-bone/35"}>{count}</span>
+                {c} <span className={on ? "text-white/70" : "text-ink/35"}>{count}</span>
               </span>
             </button>
           );
@@ -65,16 +65,16 @@ export function WorkGrid({ projects }: { projects: Project[] }) {
             <button
               type="button"
               onClick={() => open("work:your-brand")}
-              className="group dot-grid flex h-full min-h-72 w-full flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-white/20 bg-iron/40 p-8 text-center text-bone transition-colors hover:border-red hover:bg-red/10"
+              className="group dot-grid-ink flex h-full min-h-72 w-full flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-ink/20 bg-white/60 p-8 text-center text-ink transition-colors hover:border-red hover:bg-red/5"
             >
               <span className="grid size-16 place-items-center rounded-full bg-red text-white shadow-[0_0_30px_rgba(227,18,28,0.5)] transition-transform duration-500 group-hover:rotate-90">
                 <Plus className="size-7" />
               </span>
               <span className="font-display text-2xl font-black tracking-tight uppercase">Your brand here</span>
-              <span className="max-w-[16rem] text-sm font-medium text-bone/55">
+              <span className="max-w-[16rem] text-sm font-medium text-ink/55">
                 This spot is saved for the next business that moves in. Could be yours.
               </span>
-              <span className="font-display text-xs font-black tracking-[0.14em] text-red-bright">START A PROJECT →</span>
+              <span className="font-display text-xs font-black tracking-[0.14em] text-red">START A PROJECT →</span>
             </button>
           </motion.div>
         </AnimatePresence>
@@ -86,14 +86,10 @@ export function WorkGrid({ projects }: { projects: Project[] }) {
 function ProjectCard({ project: p, onSimilar }: { project: Project; onSimilar: () => void }) {
   const live = !!p.url;
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/12 bg-iron text-bone transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-red hover:shadow-pop-lg">
-      <div className="border-b border-white/10">
-        <ProjectCover project={p} size="sm" showImage={false} className="aspect-[64/17]" />
-      </div>
-
-      <div className="flex items-center justify-between gap-2 px-4 pt-3 pb-1">
-        <h3 className="truncate font-display text-base font-black tracking-tight uppercase">{p.name}</h3>
-        <span className="flex shrink-0 items-center gap-1.5 font-display text-[0.6rem] font-black tracking-[0.14em] text-bone/45">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-white text-ink shadow-soft transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-red hover:shadow-pop-lg">
+      <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-1">
+        <h3 className="truncate font-display text-lg font-black tracking-tight uppercase">{p.name}</h3>
+        <span className="flex shrink-0 items-center gap-1.5 font-display text-[0.6rem] font-black tracking-[0.14em] text-ink/45">
           {live ? (
             <>
               <span className="relative flex size-1.5">
@@ -107,15 +103,15 @@ function ProjectCard({ project: p, onSimilar }: { project: Project; onSimilar: (
           )}
         </span>
       </div>
-      <p className="line-clamp-2 min-h-8 px-4 pb-3 text-xs font-medium text-bone/55 box-content">{p.blurb}</p>
+      <p className="line-clamp-2 min-h-8 px-4 pb-3 text-xs font-medium text-ink/60 box-content">{p.blurb}</p>
 
       {/* mini browser */}
-      <div className="mx-4 mb-4 overflow-hidden rounded-lg border border-white/12">
-        <div className="flex items-center gap-1.5 border-b border-white/10 bg-steel px-2.5 py-1.5">
+      <div className="mx-4 mb-4 overflow-hidden rounded-lg border border-ink/10">
+        <div className="flex items-center gap-1.5 border-b border-ink/10 bg-[#f1efeb] px-2.5 py-1.5">
           <span className="size-1.5 rounded-full bg-red" />
-          <span className="size-1.5 rounded-full bg-bone/40" />
-          <span className="size-1.5 rounded-full bg-bone/20" />
-          <span className="ml-1 min-w-0 truncate rounded-full bg-white/5 px-2 font-display text-[0.55rem] font-bold tracking-wide text-bone/55">
+          <span className="size-1.5 rounded-full bg-ink/25" />
+          <span className="size-1.5 rounded-full bg-ink/15" />
+          <span className="ml-1 min-w-0 truncate rounded-full bg-white px-2 font-display text-[0.55rem] font-bold tracking-wide text-ink/55">
             {p.domain ?? p.url?.replace(/^https?:\/\//, "").replace(/\/$/, "") ?? "yourbrand.com"}
           </span>
         </div>
@@ -129,7 +125,7 @@ function ProjectCard({ project: p, onSimilar }: { project: Project; onSimilar: (
           href={p.url}
           target="_blank"
           rel="noreferrer"
-          className="mt-auto flex items-center justify-center gap-1.5 border-t border-white/10 bg-steel py-3 text-center font-display text-xs font-black tracking-[0.14em] text-bone transition-colors hover:bg-red hover:text-white"
+          className="mt-auto flex items-center justify-center gap-1.5 border-t border-ink/10 bg-ink py-3 text-center font-display text-xs font-black tracking-[0.14em] text-white transition-colors hover:bg-red"
         >
           VISIT WEBSITE
           <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -138,7 +134,7 @@ function ProjectCard({ project: p, onSimilar }: { project: Project; onSimilar: (
         <button
           type="button"
           onClick={onSimilar}
-          className="mt-auto flex items-center justify-center gap-1.5 border-t border-white/10 bg-steel py-3 text-center font-display text-xs font-black tracking-[0.14em] text-bone transition-colors hover:bg-red hover:text-white"
+          className="mt-auto flex items-center justify-center gap-1.5 border-t border-ink/10 bg-ink py-3 text-center font-display text-xs font-black tracking-[0.14em] text-white transition-colors hover:bg-red"
         >
           WANT ONE LIKE THIS?
           <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

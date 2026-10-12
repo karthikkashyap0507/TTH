@@ -9,9 +9,10 @@ import { Stats } from "@/components/Stats";
 import { Process } from "@/components/home/Process";
 import { TeamTeaser } from "@/components/home/TeamTeaser";
 import { ContactCTA } from "@/components/ContactCTA";
-import { services, site, tagline } from "@/content/site";
+import { services, site, tagline, team } from "@/content/site";
 
 export default function HomePage() {
+  const founder = team[0];
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
@@ -25,6 +26,9 @@ export default function HomePage() {
     areaServed: "IN",
     address: { "@type": "PostalAddress", addressLocality: "Delhi", addressCountry: "IN" },
     sameAs: [site.socials.instagram.href, site.socials.linkedin.href],
+    ...(founder && {
+      founder: { "@type": "Person", name: founder.name, sameAs: [founder.instagram, founder.linkedin].filter(Boolean) },
+    }),
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Services",

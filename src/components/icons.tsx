@@ -203,6 +203,16 @@ export function PlayIcon(props: IconProps) {
   );
 }
 
+/** Generic person silhouette — chat avatars where we don't show client names. */
+export function UserIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <circle cx="12" cy="8.2" r="4.2" />
+      <path d="M3.8 20.4c.9-4 4.2-6.4 8.2-6.4s7.3 2.4 8.2 6.4a.9.9 0 0 1-.9 1.1H4.7a.9.9 0 0 1-.9-1.1Z" />
+    </svg>
+  );
+}
+
 export function StarIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>

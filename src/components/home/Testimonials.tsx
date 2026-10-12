@@ -5,8 +5,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { testimonials, type Testimonial } from "@/content/site";
 import { Reveal } from "@/components/Reveal";
 import { GetWebsiteCTA } from "@/components/GetWebsiteCTA";
-import { ArrowLeft, ArrowRight, Close, DoubleTick } from "@/components/icons";
-import { cx, toneClass } from "@/lib/tones";
+import { ArrowLeft, ArrowRight, Close, DoubleTick, UserIcon } from "@/components/icons";
+import { cx } from "@/lib/tones";
 import { useScrollLock } from "@/lib/useScrollLock";
 
 export function Testimonials() {
@@ -152,27 +152,18 @@ function ChatCard({ t, onOpen }: { t: Testimonial; onOpen: () => void }) {
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), onOpen())}
       tabIndex={0}
       role="button"
-      aria-label={`Read message from ${t.client}, ${t.business.toLowerCase()}`}
-      className="flex w-[18.5rem] shrink-0 flex-col overflow-hidden rounded-2xl border border-white/12 bg-iron text-bone transition-[border-color,box-shadow] duration-300 hover:border-red hover:shadow-pop sm:w-[19.5rem]"
+      aria-label={`Read message from a client — ${t.role}, ${t.work.toLowerCase()}`}
+      className="flex w-[18.5rem] shrink-0 flex-col overflow-hidden rounded-2xl border border-white/12 bg-iron p-4 text-bone transition-[border-color,box-shadow] duration-300 hover:border-red hover:shadow-pop sm:w-[19.5rem] sm:p-5"
     >
-      <div className={cx("relative flex aspect-[13/5] items-center justify-center overflow-hidden border-b border-white/10", toneClass[t.tone])}>
-        <span className="font-display text-4xl font-black tracking-tighter opacity-90">{t.initials}</span>
-        <span className="absolute top-2.5 right-2.5 rounded-full bg-ink/85 px-2.5 py-0.5 font-display text-[0.55rem] font-bold tracking-[0.12em] text-bone ring-1 ring-white/15">
+      <ChatWindow t={t} compact />
+      <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+        <span className="inline-flex min-w-0 items-center gap-2 font-display text-[0.6rem] font-black tracking-[0.14em] text-red-bright">
+          <span className="size-1.5 shrink-0 rounded-full bg-red" />
+          <span className="truncate">{t.work}</span>
+        </span>
+        <span className="shrink-0 rounded-full bg-white/10 px-2.5 py-0.5 font-display text-[0.55rem] font-bold tracking-[0.12em] text-bone/75">
           {t.platform}
         </span>
-      </div>
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <ChatWindow t={t} compact />
-        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
-          {t.website ? (
-            <span className="truncate font-display text-xs font-black tracking-tight underline decoration-red decoration-2 underline-offset-4">
-              {t.website}
-            </span>
-          ) : (
-            <span className="truncate font-display text-xs font-black tracking-tight">{t.client}</span>
-          )}
-          <span className="shrink-0 font-display text-[0.55rem] font-bold tracking-[0.12em] text-red-bright">{t.business}</span>
-        </div>
       </div>
     </motion.article>
   );
@@ -184,16 +175,18 @@ function ChatWindow({ t, compact = false }: { t: Testimonial; compact?: boolean 
     return (
       <div className={cx("relative overflow-hidden rounded-xl border border-white/12", compact && "max-h-[300px]")}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={t.screenshot} alt={`Message from ${t.client}`} className="w-full" loading="lazy" draggable={false} />
+        <img src={t.screenshot} alt={`Message from a client — ${t.role}`} className="w-full" loading="lazy" draggable={false} />
       </div>
     );
   }
   return (
     <div className={cx("relative overflow-hidden rounded-xl border border-white/12", compact && "h-[260px]")}>
-      <div className="flex items-center gap-2 border-b border-white/10 bg-[#1c1c1c] px-3 py-2 text-white">
-        <span className="grid size-6 place-items-center rounded-full bg-red font-display text-[0.55rem] font-black">{t.initials}</span>
-        <div className="min-w-0">
-          <p className="truncate text-xs font-bold">{t.client}</p>
+      <div className="flex items-center gap-2.5 border-b border-white/10 bg-[#1c1c1c] px-3 py-2.5 text-white">
+        <span className="grid size-8 shrink-0 place-items-center rounded-full bg-red text-white">
+          <UserIcon className="size-4" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[13px] leading-tight font-bold">{t.role}</p>
           <p className="text-[0.6rem] text-white/60">online</p>
         </div>
       </div>
@@ -262,7 +255,7 @@ function Lightbox({
           exit={{ opacity: 0 }}
           role="dialog"
           aria-modal="true"
-          aria-label={`Message from ${t.client}`}
+          aria-label={`Message from a client — ${t.role}`}
         >
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={onClose} />
           <motion.div
@@ -276,9 +269,9 @@ function Lightbox({
             <div className="overflow-hidden rounded-3xl border border-white/15 bg-iron text-bone shadow-pop-lg">
               <div className="flex items-center justify-between gap-3 border-b border-white/10 px-5 py-3.5">
                 <div className="min-w-0">
-                  <p className="truncate font-display text-sm font-black tracking-tight uppercase">{t.client}</p>
+                  <p className="truncate font-display text-sm font-black tracking-tight uppercase">{t.role}</p>
                   <p className="font-display text-[0.6rem] font-bold tracking-[0.14em] text-red-bright">
-                    {t.business} · VIA {t.platform}
+                    {t.work} · VIA {t.platform}
                   </p>
                 </div>
                 <button

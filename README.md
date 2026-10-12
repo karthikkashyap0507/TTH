@@ -23,11 +23,11 @@ npm start
 
 | Page | What it does |
 | --- | --- |
-| `/` | Hero with draggable, throwable stickers and a rotating outlined headline, a spinning badge, a services marquee, a **scratch-to-reveal** services card, featured work, a chat-style testimonial carousel with a lightbox, count-up stats, the process, the team and a contact CTA |
+| `/` | Hero with draggable, throwable stickers and a rotating outlined headline, a spinning badge, a services marquee, six service cards, results, a sliding client strip, featured work, a chat-style testimonial carousel (each message labelled with the client's role) with a lightbox, count-up stats, the process, the founder and a contact CTA |
 | `/results` | The Ecom Performance System + four case studies from the company profile, with zoomable Meta Ads Manager screenshots |
 | `/work` | Filterable portfolio with animated "live site" previews in mini browser windows |
 | `/why-us` | Six reasons brands choose TSH, then a short article with five animated illustrations |
-| `/about` | Company story, founder's message, marquee, stats and team cards |
+| `/about` | Company story, founder's message, marquee, stats and the founder's profile |
 | `/admin` | Password-protected dashboard: project enquiries, search, one-tap WhatsApp reply, CSV export |
 
 The **Start a project** button (navbar, hero, CTAs) opens a three-step wizard.
@@ -52,10 +52,10 @@ Everything marked `✏️ REPLACE` in `src/content/site.ts`:
 
 - [ ] **Socials**: real Instagram and LinkedIn links (phone, email and WhatsApp are already set from the company profile)
 - [ ] **Projects**: four real client sites are in. Add more by dropping a screenshot in `public/work/` and copying an entry.
-- [ ] **Testimonials**: use real client messages, with their permission. Type them out, or set `screenshot` to an image in `public/reviews/`.
+- [ ] **Testimonials**: the six messages are placeholders, each labelled with a client role (e.g. "Clothing brand owner") instead of a name. Swap in real messages, with permission — type them out, or set `screenshot` to an image in `public/reviews/`.
 - [ ] **Case-study numbers**: a few figures in the company profile disagree with its own screenshots (see "Content notes" below) — confirm which are right
 - [ ] **Founding year**: the profile says January 2023 in one place and January 2022 in another, so the site doesn't mention a year yet
-- [ ] **Team**: real names (incl. the founder's name for the founder's message), roles, photos (`public/team/...`), socials and facts
+- [ ] **Founder**: Chinmay Sharma, with Instagram (@chinmay.buildz) linked — there is no co-founder. Optional: add a photo (`public/team/...`) and a LinkedIn link in the `team` entry
 - [ ] `NEXT_PUBLIC_SITE_URL`: your domain (see below)
 
 ## Content notes

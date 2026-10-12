@@ -30,21 +30,11 @@ function ScrollShot({ src, alt }: { src: string; alt: string }) {
 }
 
 /** Cover art: the project's screenshot, or a generated monogram poster. */
-export function ProjectCover({
-  project,
-  className,
-  size = "lg",
-  showImage = true,
-}: {
-  project: Project;
-  className?: string;
-  size?: "lg" | "sm";
-  showImage?: boolean;
-}) {
+export function ProjectCover({ project, className }: { project: Project; className?: string }) {
   const { palette } = project;
   return (
     <div className={cx("relative overflow-hidden", className)} style={{ background: palette.accent, color: palette.bg }}>
-      {project.image && showImage ? (
+      {project.image ? (
         <ScrollShot src={project.image} alt={`${project.name} website`} />
       ) : (
         <>
@@ -60,12 +50,7 @@ export function ProjectCover({
             style={{ background: palette.fg }}
           />
           <div className="absolute inset-0 grid place-items-center">
-            <span
-              className={cx(
-                "font-display font-black tracking-tighter transition-transform duration-500 group-hover:scale-110",
-                size === "lg" ? "text-[3.25rem] sm:text-[6rem] lg:text-[7.5rem]" : "text-4xl sm:text-5xl",
-              )}
-            >
+            <span className="font-display text-[3.25rem] font-black tracking-tighter transition-transform duration-500 group-hover:scale-110 sm:text-[6rem] lg:text-[7.5rem]">
               {project.monogram ?? initials(project.name)}
             </span>
           </div>
