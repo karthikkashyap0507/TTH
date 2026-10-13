@@ -97,7 +97,16 @@ Copy `.env.example` to `.env.local` and fill in what you need:
 
 ## Deploying
 
-**Vercel (easiest):** push to GitHub → import the repo on vercel.com → add the environment variables (including the Upstash ones) → deploy.
+**Google Cloud (www.thescalehouse.in):** Cloud Run in Mumbai behind an HTTPS load balancer with a free, auto-renewing Google-managed SSL certificate. In Cloud Shell:
+
+```bash
+git clone https://github.com/karthikkashyap0507/TTH.git thescalehouse && cd thescalehouse
+bash deploy/gcp-deploy.sh
+```
+
+The script prints the load balancer IP. Point the domain at it with two DNS records at your registrar: `A @ <IP>` and `A www <IP>`. Keep MX/TXT records for email. The certificate turns ACTIVE 15–60 minutes later. To ship an update: `git pull && bash deploy/gcp-deploy.sh`. The build uses the `Dockerfile`; `thescalehouse.in` redirects to `www.thescalehouse.in` (see `next.config.ts`).
+
+**Vercel:** push to GitHub → import the repo on vercel.com → add the environment variables (including the Upstash ones) → deploy.
 
 **Your own server:** `npm ci && npm run build && npm start` (use pm2 or systemd to keep it running). Put Nginx or Caddy in front for HTTPS.
 

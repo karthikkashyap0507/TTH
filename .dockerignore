@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.vercel
+.data
+.env*
+!.env.example
+*.log
+Dockerfile
+.dockerignore
+/WhatsApp Image*
+/The Scale House.pdf

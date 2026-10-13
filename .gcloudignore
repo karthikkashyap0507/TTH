@@ -1,0 +1,13 @@
+# Files `gcloud run deploy --source .` should NOT upload to Google Cloud
+.gcloudignore
+.git
+.gitignore
+.vercel
+node_modules
+.next
+.data
+.env*
+!.env.example
+*.log
+/WhatsApp Image*
+/The Scale House.pdf
